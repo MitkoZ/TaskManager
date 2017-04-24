@@ -1,0 +1,6 @@
+D:\Visual Studio Community\Projects\TaskManager\TaskManager\bin\Debug\TaskManager.exe.config
+D:\Visual Studio Community\Projects\TaskManager\TaskManager\bin\Debug\TaskManager.exe
+D:\Visual Studio Community\Projects\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
+D:\Visual Studio Community\Projects\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
+D:\Visual Studio Community\Projects\TaskManager\TaskManager\obj\Debug\TaskManager.exe
+D:\Visual Studio Community\Projects\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
