@@ -59,7 +59,7 @@ namespace TaskManager.Repository
             return null;
         }
 
-        public bool UserExist(string username)
+        private bool UserExist(string username)
         {
             StreamReader streamReader = new StreamReader(filePath);
             try
@@ -79,6 +79,30 @@ namespace TaskManager.Repository
                 streamReader.Close();
             }
             return false;
+        }
+
+        private User GetByUsername(string username)
+        {
+            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(fileStream);
+            try
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    User userDatabase = new User();
+                    PopulateEntity(userDatabase, streamReader);
+                    if (username == userDatabase.Username)
+                    {
+                        return userDatabase;
+                    }
+                }
+            }
+            finally
+            {
+                fileStream.Close();
+                streamReader.Close();
+            }
+            return null;
         }
 
         public void Add()
@@ -103,9 +127,11 @@ namespace TaskManager.Repository
             }
         }
 
-        public void Edit()
+        public void Edit() //by username
         {
-
+            Console.Write("Enter user username: ");
+            string usernameInput = Console.ReadLine();
+            User oldUser=View(usernameInput);//todo
         }
 
         public void Delete()
@@ -113,14 +139,45 @@ namespace TaskManager.Repository
 
         }
 
-        public void View()
+        public User View(string username)
         {
-
+            bool userExist = UserExist(username);
+            if (userExist)
+            {
+                User user = GetByUsername(username);
+                Console.WriteLine("Id " + user.Id);
+                Console.WriteLine("Username: " + user.Username);
+                Console.WriteLine("Password: " + user.Password);
+                Console.WriteLine("Is Admin?: " + user.isAdmin);
+                return user;
+            }
+            else
+            {
+                Console.WriteLine("This user doesn't exist");
+                Console.ReadKey(true);
+                return null;
+            }
         }
 
-        public void MakeAdmin()
+        public void View()
         {
-
+            Console.Write("Enter user username: ");
+            string usernameInput = Console.ReadLine();
+            bool userExist = UserExist(usernameInput);
+            if (userExist)
+            {
+                User user = GetByUsername(usernameInput);
+                Console.WriteLine("Id "+user.Id);
+                Console.WriteLine("Username: "+user.Username);
+                Console.WriteLine("Password: "+user.Password);
+                Console.WriteLine("Is Admin?: "+user.isAdmin);
+            }
+            else
+            {
+                Console.WriteLine("This user doesn't exist");
+                Console.ReadKey(true);
+                return;
+            }
         }
     }
 }

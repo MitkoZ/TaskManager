@@ -12,7 +12,14 @@ namespace TaskManager.Tools
         Edit=2,
         Delete=3,
         View=4,
-        MakeAdmin=5,
-        Exit=6
+        Exit=5
+    }
+
+    public enum AdminRepoEditEnum
+    {
+        Usename=1,
+        Password=2,
+        Privileges=3,
+        Exit=4
     }
 }
