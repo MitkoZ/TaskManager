@@ -8,7 +8,7 @@ using TaskManager.Entity;
 
 namespace TaskManager.Repository
 {
-    class BaseRepository/*<T>*/
+    class BaseRepository<T> where T:BaseEntity,new()
     {
         protected readonly string filePath;
         
@@ -16,38 +16,38 @@ namespace TaskManager.Repository
         {
             this.filePath = filePath;
         }
-        protected void PopulateEntity(/*T*/User item)
+
+        protected virtual void PopulateEntity(T item, StreamReader streamReader)
         {
-            FileStream stream = new FileStream(this.filePath, FileMode.Append);
-            StreamWriter streamWriter = new StreamWriter(stream);
-            streamWriter.WriteLine("\r\n"+item.Username);
-            streamWriter.WriteLine(item.Password);
-            streamWriter.WriteLine(item.isAdmin);
-            streamWriter.Close();
-            TrailingSpaceRemove(this.filePath);
         }
-        public bool UserExist(string username)
+
+        protected virtual void WriteEntity(T item)
         {
-            StreamReader streamReader = new StreamReader(filePath);
+        }
+
+        protected int GetNextId()
+        {
+            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(fileStream);
             try
             {
+                int id = 1;
                 while (!streamReader.EndOfStream)
                 {
-                    User userDatabase = new User();
-                    userDatabase.Username = streamReader.ReadLine();
-                    userDatabase.Password = streamReader.ReadLine();
-                    userDatabase.isAdmin = Convert.ToBoolean(streamReader.ReadLine());
-                    if (userDatabase.Username==username)
+                    T item = new T();
+                    PopulateEntity(item,streamReader);
+                    if (id<=item.Id)
                     {
-                        return true;// a user with the same username already exists
+                        id = item.Id + 1;
                     }
                 }
+                return id;
             }
             finally
             {
+                fileStream.Close();
                 streamReader.Close();
             }
-            return false;
         }
 
         public void TrailingSpaceRemove(string filePath)

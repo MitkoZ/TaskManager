@@ -11,7 +11,7 @@ namespace TaskManager.View
     {
         public override void Show()
         {
-            AdminRepository adminRepo = new AdminRepository("users.txt");
+            UsersRepository adminRepo = new UsersRepository("users.txt");
             AdminViewEnum choice = RenderMenu();
             Console.Clear();
             switch (choice)
