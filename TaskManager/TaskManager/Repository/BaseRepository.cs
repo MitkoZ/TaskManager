@@ -8,7 +8,7 @@ using TaskManager.Entity;
 
 namespace TaskManager.Repository
 {
-    class BaseRepository<T> where T:BaseEntity,new()
+    class BaseRepository<T> where T:BaseEntity, new()
     {
         protected readonly string filePath;
         
@@ -17,17 +17,52 @@ namespace TaskManager.Repository
             this.filePath = filePath;
         }
 
-        protected virtual void PopulateEntity(T item, StreamReader streamReader)
+        public void Update(T oldItem)
+        {
+            string tempFilePath = "temp." + filePath;
+            FileStream inputFileStream = new FileStream(filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(inputFileStream);
+            FileStream outputFileStream = new FileStream(tempFilePath, FileMode.OpenOrCreate);
+            StreamWriter streamWriter = new StreamWriter(outputFileStream);
+
+            try
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    T itemDatabase = new T();
+                    PopulateEntity(itemDatabase, streamReader);
+                    if (itemDatabase.Id != oldItem.Id)
+                    {
+                        WriteEntity(itemDatabase, streamWriter);
+                    }
+                    else
+                    {
+                        WriteEntity(oldItem, streamWriter);
+                    }
+                }
+            }
+            finally
+            {
+                streamWriter.Close();
+                outputFileStream.Close();
+                streamReader.Close();
+                inputFileStream.Close();
+            }
+            File.Delete(filePath);
+            File.Move(tempFilePath, filePath);
+        }
+
+        public virtual void PopulateEntity(T item, StreamReader streamReader)
         {
         }
 
-        protected virtual void WriteEntity(T item)
+        public virtual void WriteEntity(T item, StreamWriter streamWriter)
         {
         }
 
-        protected int GetNextId()
+        public int GetNextId()
         {
-            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            FileStream fileStream = new FileStream(this.filePath,FileMode.OpenOrCreate);
             StreamReader streamReader = new StreamReader(fileStream);
             try
             {
@@ -48,13 +83,6 @@ namespace TaskManager.Repository
                 fileStream.Close();
                 streamReader.Close();
             }
-        }
-
-        public void TrailingSpaceRemove(string filePath)
-        {
-            string file = File.ReadAllText(filePath).Trim();
-            File.Delete(filePath);
-            File.AppendAllText(filePath, file);
         }
     }
 }

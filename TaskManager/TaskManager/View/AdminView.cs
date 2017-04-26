@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManager.Entity;
 using TaskManager.Repository;
 using TaskManager.Tools;
 namespace TaskManager.View
 {
-    class AdminView:UserView
+    class AdminView : UserView
     {
         public override void Show()
         {
@@ -18,22 +20,22 @@ namespace TaskManager.View
             {
                 case AdminViewEnum.Add:
                     {
-                        adminRepo.Add();
+                        Add();
                         break;
                     }
-                case AdminViewEnum.Edit:
+                case AdminViewEnum.Update:
                     {
-                        adminRepo.Edit();
+                        Update();
                         break;
                     }
                 case AdminViewEnum.Delete:
                     {
-                        adminRepo.Delete();
+                        Delete();
                         break;
                     }
                 case AdminViewEnum.View:
                     {
-                        adminRepo.View();
+                        View();
                         break;
                     }
                 case AdminViewEnum.Exit:
@@ -44,32 +46,91 @@ namespace TaskManager.View
             Console.ReadKey(true);
         }
 
-         public void ShowEdit()
-         {
-           AdminRepoEditEnum choice = RenderEditMenu();//todo
-            switch (choice)
+        private void Delete()
+        {
+
+        }
+
+        private void Update() //by username
+        {
+            Console.Clear();
+            UsersRepository adminRepo = new UsersRepository("users.txt");
+            Console.Write("Enter user username: ");
+            string usernameInput = Console.ReadLine();
+            Console.Clear();
+            User oldUser = adminRepo.View(usernameInput);
+            Console.Write("Enter new username: ");
+            User userInput = new User();
+            userInput.Username=Console.ReadLine();
+            Console.Write("Enter new password: ");
+            userInput.Password = Console.ReadLine();
+            Console.Write("Is admin?: (true or false) ");
+            string isAdmin = Console.ReadLine();
+            if (!string.IsNullOrEmpty(userInput.Username))
             {
-                case AdminRepoEditEnum.Usename:
-                    {
-                        break;
-                    }
-                    
-                case AdminRepoEditEnum.Password:
-                    {
-                        break;
-                    }
-                    
-                case AdminRepoEditEnum.Privileges:
-                    {
-                        break;
-                    }
-                    
-                case AdminRepoEditEnum.Exit:
-                    {
-                        return;
-                    }
+                oldUser.Username = userInput.Username;
+            }
+            if (!string.IsNullOrEmpty(userInput.Password))
+            {
+                oldUser.Password = userInput.Password;
+            }
+            if (!string.IsNullOrEmpty(isAdmin) && isAdmin.ToLower() == "true"|| isAdmin=="false")
+            {
+                oldUser.isAdmin = Convert.ToBoolean(isAdmin);
+            }
+            adminRepo.Update(oldUser);
+            Console.WriteLine("User changed!");
+        }
+
+        private void Add()
+        { 
+            User userInput = new Entity.User();
+            Console.Write("Enter username: ");
+            userInput.Username = Console.ReadLine();
+            Console.Write("Enter password: ");
+            userInput.Password = Console.ReadLine();
+            Console.Write("Admin? (true or false)");
+            userInput.isAdmin = Convert.ToBoolean(Console.ReadLine());
+            UsersRepository adminRepo = new UsersRepository("users.txt");
+            bool userExist = adminRepo.UserExist(userInput.Username);
+            if (userExist)
+            {
+                Console.WriteLine("A user with the same username already exists!");
+                return;
+            }
+            else
+            {
+                userInput.Id= adminRepo.GetNextId();
+                FileStream fileStream = new FileStream("users.txt", FileMode.Append);
+                StreamWriter streamWriter = new StreamWriter(fileStream);
+                adminRepo.WriteEntity(userInput, streamWriter);
+                Console.WriteLine("User added!");
+                streamWriter.Close();
             }
         }
+
+        private void View()
+        {
+            UsersRepository userRepo = new UsersRepository("users.txt");
+            Console.Write("Enter user username: ");
+            string usernameInput = Console.ReadLine();
+            bool userExist = userRepo.UserExist(usernameInput);
+            if (userExist)
+            {
+                User user = userRepo.GetByUsername(usernameInput);
+                Console.WriteLine("Id " + user.Id);
+                Console.WriteLine("Username: " + user.Username);
+                Console.WriteLine("Password: " + user.Password);
+                Console.WriteLine("Is Admin?: " + user.isAdmin);
+            }
+            else
+            {
+                Console.WriteLine("This user doesn't exist");
+                Console.ReadKey(true);
+                return;
+            }
+        }
+
 
         private AdminViewEnum RenderMenu()
         {
@@ -91,7 +152,7 @@ namespace TaskManager.View
                         }
                     case "E":
                         {
-                            return AdminViewEnum.Edit;
+                            return AdminViewEnum.Update;
                         }
                     case "D":
                         {
@@ -104,44 +165,6 @@ namespace TaskManager.View
                     case "X":
                         {
                             return AdminViewEnum.Exit;
-                        }
-                    default:
-                        {
-                            Console.WriteLine("Invalid choice");
-                            Console.ReadKey(true);
-                            break;
-                        }
-                }
-            }
-        }
-
-        private AdminRepoEditEnum RenderEditMenu()
-        {
-            while (true)
-            {
-                Console.Clear();
-                Console.WriteLine("Change [u]sername");
-                Console.WriteLine("Change [p]assword");
-                Console.WriteLine("Change p[r]ivileges");
-                Console.WriteLine("E[x]it");
-                string choice = Console.ReadLine();
-                switch (choice)
-                {
-                    case "U":
-                        {
-                            return AdminRepoEditEnum.Usename;
-                        }
-                    case "P":
-                        {
-                            return AdminRepoEditEnum.Password;
-                        }
-                    case "R":
-                        {
-                            return AdminRepoEditEnum.Privileges;
-                        }
-                    case "X":
-                        {
-                            return AdminRepoEditEnum.Exit;
                         }
                     default:
                         {

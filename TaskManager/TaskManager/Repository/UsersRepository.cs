@@ -14,20 +14,17 @@ namespace TaskManager.Repository
         { 
         }
 
-        protected override void WriteEntity(User item)
+        
+
+        public override void WriteEntity(User item, StreamWriter streamWriter)
         {
-            item.Id = GetNextId();
-            FileStream stream = new FileStream(this.filePath, FileMode.Append);
-            StreamWriter streamWriter = new StreamWriter(stream);
-            streamWriter.WriteLine("\r\n" + item.Id);
+            streamWriter.WriteLine(item.Id);
             streamWriter.WriteLine(item.Username);
             streamWriter.WriteLine(item.Password);
             streamWriter.WriteLine(item.isAdmin);
-            streamWriter.Close();
-            TrailingSpaceRemove(this.filePath);
         }
 
-        protected override void PopulateEntity(User item, StreamReader streamReader)
+        public override void PopulateEntity(User item, StreamReader streamReader)
         {
             item.Id = Int32.Parse(streamReader.ReadLine());
             item.Username = streamReader.ReadLine();
@@ -59,7 +56,7 @@ namespace TaskManager.Repository
             return null;
         }
 
-        private bool UserExist(string username)
+        public bool UserExist(string username)
         {
             StreamReader streamReader = new StreamReader(filePath);
             try
@@ -81,7 +78,9 @@ namespace TaskManager.Repository
             return false;
         }
 
-        private User GetByUsername(string username)
+       
+
+        public User GetByUsername(string username)
         {
             FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
             StreamReader streamReader = new StreamReader(fileStream);
@@ -105,39 +104,6 @@ namespace TaskManager.Repository
             return null;
         }
 
-        public void Add()
-        {
-            User userInput = new Entity.User();
-            Console.Write("Enter username: ");
-            userInput.Username = Console.ReadLine();
-            Console.Write("Enter password: ");
-            userInput.Password = Console.ReadLine();
-            Console.Write("Admin? (true or false)");
-            userInput.isAdmin = Convert.ToBoolean(Console.ReadLine());
-            bool userExist = UserExist(userInput.Username);
-            if (userExist)
-            {
-                Console.WriteLine("A user with the same username already exists!");
-                return;
-            }
-            else
-            {
-                WriteEntity(userInput);
-                Console.WriteLine("User added!");
-            }
-        }
-
-        public void Edit() //by username
-        {
-            Console.Write("Enter user username: ");
-            string usernameInput = Console.ReadLine();
-            User oldUser=View(usernameInput);//todo
-        }
-
-        public void Delete()
-        {
-
-        }
 
         public User View(string username)
         {
@@ -159,25 +125,6 @@ namespace TaskManager.Repository
             }
         }
 
-        public void View()
-        {
-            Console.Write("Enter user username: ");
-            string usernameInput = Console.ReadLine();
-            bool userExist = UserExist(usernameInput);
-            if (userExist)
-            {
-                User user = GetByUsername(usernameInput);
-                Console.WriteLine("Id "+user.Id);
-                Console.WriteLine("Username: "+user.Username);
-                Console.WriteLine("Password: "+user.Password);
-                Console.WriteLine("Is Admin?: "+user.isAdmin);
-            }
-            else
-            {
-                Console.WriteLine("This user doesn't exist");
-                Console.ReadKey(true);
-                return;
-            }
-        }
+        
     }
 }
