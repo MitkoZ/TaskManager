@@ -48,8 +48,24 @@ namespace TaskManager.View
 
         private void Delete()
         {
-
+            UsersRepository userRepo = new UsersRepository("users.txt");
+            Console.Clear();
+            Console.WriteLine("Delete user: ");
+            Console.Write("Username: ");
+            string username = Console.ReadLine();
+            User user = userRepo.GetByUsername(username);
+            if (user == null)
+            {
+                Console.WriteLine("User not found");
+            }
+            else
+            {
+                userRepo.Delete(user);
+                Console.WriteLine("User deleted successfully.");
+            }
+            Console.ReadKey(true);
         }
+
 
         private void Update() //by username
         {
@@ -131,6 +147,7 @@ namespace TaskManager.View
             }
         }
 
+        
 
         private AdminViewEnum RenderMenu()
         {

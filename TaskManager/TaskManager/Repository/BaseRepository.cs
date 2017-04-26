@@ -17,6 +17,38 @@ namespace TaskManager.Repository
             this.filePath = filePath;
         }
 
+        public void Delete(T item)
+        {
+            string tempFilePath = "temp." + filePath;
+            FileStream inputFileStream = new FileStream(filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(inputFileStream);
+            FileStream outputFileStream = new FileStream(tempFilePath, FileMode.OpenOrCreate);
+            StreamWriter streamWriter = new StreamWriter(outputFileStream);
+            try
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    T itemDatabase = new T();
+                    PopulateEntity(itemDatabase,streamReader);
+                    if (itemDatabase.Id != item.Id)
+                    {
+                        WriteEntity(itemDatabase, streamWriter);
+                    }
+                }
+            }
+            finally
+            {
+                streamWriter.Close();
+                outputFileStream.Close();
+                streamReader.Close();
+                inputFileStream.Close();
+            }
+
+            File.Delete(filePath);
+            File.Move(tempFilePath, filePath);
+        }
+
+
         public void Update(T oldItem)
         {
             string tempFilePath = "temp." + filePath;
