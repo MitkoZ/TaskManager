@@ -4,3 +4,9 @@ D:\Visual Studio Community\Projects\TaskManager\TaskManager\bin\Debug\TaskManage
 D:\Visual Studio Community\Projects\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
 D:\Visual Studio Community\Projects\TaskManager\TaskManager\obj\Debug\TaskManager.exe
 D:\Visual Studio Community\Projects\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
+C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe.config
+C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.exe
+C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
+C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe
+C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
+C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache

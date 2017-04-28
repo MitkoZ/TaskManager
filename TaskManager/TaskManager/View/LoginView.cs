@@ -14,13 +14,12 @@ namespace TaskManager.View
             while (true)
             {
                 Console.Clear();
-                User userInput = new Entity.User();
                 Console.Write("Username: ");
-                userInput.Username = Console.ReadLine();
+                string inputUsername = Console.ReadLine();
                 Console.Write("Password: ");
-                userInput.Password = Console.ReadLine();
+                string inputPassword = Console.ReadLine();
 
-                AuthenticationService.AuthenticateUser(userInput.Username, userInput.Password);
+                AuthenticationService.AuthenticateUser(inputUsername, inputPassword);
 
                 if (AuthenticationService.LoggedUser!=null)
                 {

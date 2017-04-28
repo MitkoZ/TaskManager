@@ -14,8 +14,6 @@ namespace TaskManager.Repository
         { 
         }
 
-        
-
         public override void WriteEntity(User item, StreamWriter streamWriter)
         {
             streamWriter.WriteLine(item.Id);
@@ -56,31 +54,7 @@ namespace TaskManager.Repository
             return null;
         }
 
-        public bool UserExist(string username)
-        {
-            StreamReader streamReader = new StreamReader(filePath);
-            try
-            {
-                while (!streamReader.EndOfStream)
-                {
-                    User userDatabase = new User();
-                    PopulateEntity(userDatabase, streamReader);
-                    if (userDatabase.Username == username)
-                    {
-                        return true;// a user with the same username already exists
-                    }
-                }
-            }
-            finally
-            {
-                streamReader.Close();
-            }
-            return false;
-        }
-
-       
-
-        public User GetByUsername(string username)
+        public User GetById(int id)
         {
             FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
             StreamReader streamReader = new StreamReader(fileStream);
@@ -90,7 +64,7 @@ namespace TaskManager.Repository
                 {
                     User userDatabase = new User();
                     PopulateEntity(userDatabase, streamReader);
-                    if (username == userDatabase.Username)
+                    if (id ==userDatabase.Id)
                     {
                         return userDatabase;
                     }
@@ -103,28 +77,5 @@ namespace TaskManager.Repository
             }
             return null;
         }
-
-
-        public User View(string username)
-        {
-            bool userExist = UserExist(username);
-            if (userExist)
-            {
-                User user = GetByUsername(username);
-                Console.WriteLine("Id " + user.Id);
-                Console.WriteLine("Username: " + user.Username);
-                Console.WriteLine("Password: " + user.Password);
-                Console.WriteLine("Is Admin?: " + user.isAdmin);
-                return user;
-            }
-            else
-            {
-                Console.WriteLine("This user doesn't exist");
-                Console.ReadKey(true);
-                return null;
-            }
-        }
-
-        
     }
 }

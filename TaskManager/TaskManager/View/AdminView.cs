@@ -9,41 +9,43 @@ using TaskManager.Repository;
 using TaskManager.Tools;
 namespace TaskManager.View
 {
-    class AdminView : UserView
+    class AdminView
     {
-        public override void Show()
+        public void Show()
         {
-            UsersRepository adminRepo = new UsersRepository("users.txt");
-            AdminViewEnum choice = RenderMenu();
-            Console.Clear();
-            switch (choice)
+            while (true)
             {
-                case AdminViewEnum.Add:
-                    {
-                        Add();
-                        break;
-                    }
-                case AdminViewEnum.Update:
-                    {
-                        Update();
-                        break;
-                    }
-                case AdminViewEnum.Delete:
-                    {
-                        Delete();
-                        break;
-                    }
-                case AdminViewEnum.View:
-                    {
-                        View();
-                        break;
-                    }
-                case AdminViewEnum.Exit:
-                    {
-                        return;
-                    }
+                AdminViewEnum choice = RenderMenu();
+                Console.Clear();
+                switch (choice)
+                {
+                    case AdminViewEnum.Add:
+                        {
+                            Add();
+                            break;
+                        }
+                    case AdminViewEnum.Update:
+                        {
+                            Update();
+                            break;
+                        }
+                    case AdminViewEnum.Delete:
+                        {
+                            Delete();
+                            break;
+                        }
+                    case AdminViewEnum.View:
+                        {
+                            View();
+                            break;
+                        }
+                    case AdminViewEnum.Exit:
+                        {
+                            return;
+                        }
+                }
+                Console.ReadKey(true);
             }
-            Console.ReadKey(true);
         }
 
         private void Delete()
@@ -51,9 +53,9 @@ namespace TaskManager.View
             UsersRepository userRepo = new UsersRepository("users.txt");
             Console.Clear();
             Console.WriteLine("Delete user: ");
-            Console.Write("Username: ");
-            string username = Console.ReadLine();
-            User user = userRepo.GetByUsername(username);
+            Console.Write("Id: ");
+            int id = Int32.Parse(Console.ReadLine());
+            User user = userRepo.GetById(id);
             if (user == null)
             {
                 Console.WriteLine("User not found");
@@ -65,16 +67,15 @@ namespace TaskManager.View
             }
             Console.ReadKey(true);
         }
-
-
-        private void Update() //by username
+        
+        private void Update() //by id
         {
             Console.Clear();
             UsersRepository adminRepo = new UsersRepository("users.txt");
-            Console.Write("Enter user username: ");
-            string usernameInput = Console.ReadLine();
+            Console.Write("Enter user id: ");
+            int idInput = Int32.Parse(Console.ReadLine());
             Console.Clear();
-            User oldUser = adminRepo.View(usernameInput);
+            User oldUser = adminRepo.GetById(idInput);
             Console.Write("Enter new username: ");
             User userInput = new User();
             userInput.Username=Console.ReadLine();
@@ -108,47 +109,26 @@ namespace TaskManager.View
             Console.Write("Admin? (true or false)");
             userInput.isAdmin = Convert.ToBoolean(Console.ReadLine());
             UsersRepository adminRepo = new UsersRepository("users.txt");
-            bool userExist = adminRepo.UserExist(userInput.Username);
-            if (userExist)
-            {
-                Console.WriteLine("A user with the same username already exists!");
-                return;
-            }
-            else
-            {
-                userInput.Id= adminRepo.GetNextId();
-                FileStream fileStream = new FileStream("users.txt", FileMode.Append);
-                StreamWriter streamWriter = new StreamWriter(fileStream);
-                adminRepo.WriteEntity(userInput, streamWriter);
-                Console.WriteLine("User added!");
-                streamWriter.Close();
-            }
+            userInput.Id= adminRepo.GetNextId();
+            FileStream fileStream = new FileStream("users.txt", FileMode.Append);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+            adminRepo.WriteEntity(userInput, streamWriter);
+            Console.WriteLine("User added!");
+            streamWriter.Close();
         }
 
         private void View()
         {
             UsersRepository userRepo = new UsersRepository("users.txt");
-            Console.Write("Enter user username: ");
-            string usernameInput = Console.ReadLine();
-            bool userExist = userRepo.UserExist(usernameInput);
-            if (userExist)
-            {
-                User user = userRepo.GetByUsername(usernameInput);
-                Console.WriteLine("Id " + user.Id);
-                Console.WriteLine("Username: " + user.Username);
-                Console.WriteLine("Password: " + user.Password);
-                Console.WriteLine("Is Admin?: " + user.isAdmin);
-            }
-            else
-            {
-                Console.WriteLine("This user doesn't exist");
-                Console.ReadKey(true);
-                return;
-            }
+            Console.Write("Enter user id: ");
+            int idInput = Int32.Parse(Console.ReadLine());
+            User user = userRepo.GetById(idInput);
+            Console.WriteLine("Id " + user.Id);
+            Console.WriteLine("Username: " + user.Username);
+            Console.WriteLine("Password: " + user.Password);
+            Console.WriteLine("Is Admin?: " + user.isAdmin);
         }
-
         
-
         private AdminViewEnum RenderMenu()
         {
             while (true)
