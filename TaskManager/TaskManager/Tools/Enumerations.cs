@@ -15,4 +15,13 @@ namespace TaskManager.Tools
         Exit=5,
         GetAll=6
     }
+
+    public enum UserViewEnum
+    {
+        Add=1,
+        Delete=2,
+        Update=3,
+        View=4,
+        Exit=5
+    }
 }

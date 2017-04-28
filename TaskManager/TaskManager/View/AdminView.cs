@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TaskManager.Entity;
 using TaskManager.Repository;
 using TaskManager.Tools;
+
 namespace TaskManager.View
 {
     class AdminView
@@ -66,6 +67,7 @@ namespace TaskManager.View
                 Console.WriteLine("Is Admin: "+user.isAdmin);
             }
         }
+
         private void Delete()
         {
             UsersRepository userRepo = new UsersRepository("users.txt");
@@ -112,7 +114,7 @@ namespace TaskManager.View
             {
                 oldUser.isAdmin = Convert.ToBoolean(isAdmin);
             }
-            adminRepo.Update(oldUser);
+            adminRepo.Save(oldUser);
             Console.WriteLine("User changed!");
         }
 

@@ -53,29 +53,5 @@ namespace TaskManager.Repository
             }
             return null;
         }
-
-        public User GetById(int id)
-        {
-            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
-            StreamReader streamReader = new StreamReader(fileStream);
-            try
-            {
-                while (!streamReader.EndOfStream)
-                {
-                    User userDatabase = new User();
-                    PopulateEntity(userDatabase, streamReader);
-                    if (id ==userDatabase.Id)
-                    {
-                        return userDatabase;
-                    }
-                }
-            }
-            finally
-            {
-                fileStream.Close();
-                streamReader.Close();
-            }
-            return null;
-        }
     }
 }

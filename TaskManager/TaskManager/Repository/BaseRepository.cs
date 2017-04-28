@@ -70,15 +70,29 @@ namespace TaskManager.Repository
             File.Move(tempFilePath, filePath);
         }
 
+        private void Insert(T item)
+        {
+            item.Id = GetNextId();
+            FileStream fileStream = new FileStream(filePath, FileMode.Append);
+            StreamWriter streamWriter = new StreamWriter(fileStream);
+            try
+            {
+                WriteEntity(item, streamWriter);
+            }
+            finally
+            {
+                streamWriter.Close();
+                fileStream.Close();
+            }
+        }
 
-        public void Update(T oldItem)
+        private void Update(T oldItem)
         {
             string tempFilePath = "temp." + filePath;
             FileStream inputFileStream = new FileStream(filePath, FileMode.OpenOrCreate);
             StreamReader streamReader = new StreamReader(inputFileStream);
             FileStream outputFileStream = new FileStream(tempFilePath, FileMode.OpenOrCreate);
             StreamWriter streamWriter = new StreamWriter(outputFileStream);
-
             try
             {
                 while (!streamReader.EndOfStream)
@@ -136,6 +150,42 @@ namespace TaskManager.Repository
             {
                 fileStream.Close();
                 streamReader.Close();
+            }
+        }
+
+        public T GetById(int id)
+        {
+            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(fileStream);
+            try
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    T itemDatabase = new T();
+                    PopulateEntity(itemDatabase, streamReader);
+                    if (id == itemDatabase.Id)
+                    {
+                        return itemDatabase;
+                    }
+                }
+            }
+            finally
+            {
+                fileStream.Close();
+                streamReader.Close();
+            }
+            return null;
+        }
+
+        public void Save(T item)
+        {
+            if (item.Id > 0)
+            {
+                Update(item);
+            }
+            else
+            {
+                Insert(item);
             }
         }
     }
