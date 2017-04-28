@@ -19,6 +19,11 @@ namespace TaskManager.View
                 Console.Clear();
                 switch (choice)
                 {
+                    case AdminViewEnum.GetAll:
+                        {
+                            GetAll();
+                            break;
+                        }
                     case AdminViewEnum.Add:
                         {
                             Add();
@@ -48,6 +53,19 @@ namespace TaskManager.View
             }
         }
 
+        private void GetAll()
+        {
+            Console.Clear();
+            UsersRepository userRepo = new UsersRepository("users.txt");
+            List<User> users = userRepo.GetAll();
+            foreach (User user in users)
+            {
+                Console.WriteLine("Id: "+user.Id);
+                Console.WriteLine("Username: "+user.Username);
+                Console.WriteLine("Password: "+user.Password);
+                Console.WriteLine("Is Admin: "+user.isAdmin);
+            }
+        }
         private void Delete()
         {
             UsersRepository userRepo = new UsersRepository("users.txt");
@@ -65,7 +83,6 @@ namespace TaskManager.View
                 userRepo.Delete(user);
                 Console.WriteLine("User deleted successfully.");
             }
-            Console.ReadKey(true);
         }
         
         private void Update() //by id
@@ -135,6 +152,7 @@ namespace TaskManager.View
             {
                 Console.Clear();
                 Console.WriteLine("Admin view");
+                Console.WriteLine("[G]et all users");
                 Console.WriteLine("[A]dd a user");
                 Console.WriteLine("[E]dit a user");
                 Console.WriteLine("[D]elete a user");
@@ -143,6 +161,10 @@ namespace TaskManager.View
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
                 {
+                    case "G":
+                        {
+                            return AdminViewEnum.GetAll;
+                        }
                     case "A":
                         {
                             return AdminViewEnum.Add;

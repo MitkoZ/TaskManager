@@ -12,6 +12,7 @@ namespace TaskManager.Tools
         Update=2,
         Delete=3,
         View=4,
-        Exit=5
+        Exit=5,
+        GetAll=6
     }
 }

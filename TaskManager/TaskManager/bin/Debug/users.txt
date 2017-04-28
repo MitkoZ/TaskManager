@@ -10,7 +10,3 @@ False
 petar
 123
 False
-5
-peters
-peterpass
-True

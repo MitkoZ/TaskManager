@@ -18,9 +18,7 @@ namespace TaskManager.View
                 string inputUsername = Console.ReadLine();
                 Console.Write("Password: ");
                 string inputPassword = Console.ReadLine();
-
                 AuthenticationService.AuthenticateUser(inputUsername, inputPassword);
-
                 if (AuthenticationService.LoggedUser!=null)
                 {
                     Console.WriteLine("Welcome "+AuthenticationService.LoggedUser.Username);
@@ -32,7 +30,6 @@ namespace TaskManager.View
                     Console.WriteLine("Invalid username or password");
                     Console.ReadKey(true);
                 }
-
             }
         }
     }
