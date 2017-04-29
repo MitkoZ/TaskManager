@@ -39,5 +39,55 @@ namespace TaskManager.Repository
             item.DateLastUpdated = Convert.ToDateTime(streamReader.ReadLine());
             item.IsDone = Convert.ToBoolean(streamReader.ReadLine());
         }
+
+        public List<TaskEntity> GetAll(int parentUserId) //returns the created tasks by me
+        {
+            List<TaskEntity> result = new List<TaskEntity>();
+            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(fileStream);
+            try
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    TaskEntity task = new TaskEntity();
+                    PopulateEntity(task, streamReader);
+                    if (task.ParentUserId == parentUserId)
+                    {
+                        result.Add(task);
+                    }
+                }
+            }
+            finally
+            {
+                streamReader.Close();
+                fileStream.Close();
+            }
+            return result;
+        }
+
+        public List<TaskEntity> GetAllToMake(int parentUserId) //returns the tasks that I should make
+        {
+            List<TaskEntity> result = new List<TaskEntity>();
+            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+            StreamReader streamReader = new StreamReader(fileStream);
+            try
+            {
+                while (!streamReader.EndOfStream)
+                {
+                    TaskEntity task = new TaskEntity();
+                    PopulateEntity(task, streamReader);
+                    if (task.MakerID == parentUserId)
+                    {
+                        result.Add(task);
+                    }
+                }
+            }
+            finally
+            {
+                streamReader.Close();
+                fileStream.Close();
+            }
+            return result;
+        }
     }
 }

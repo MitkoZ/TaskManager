@@ -55,6 +55,7 @@
     <Compile Include="Tools\Enumerations.cs" />
     <Compile Include="View\AdminView.cs" />
     <Compile Include="View\LoginView.cs" />
+    <Compile Include="View\TaskManagerView.cs" />
     <Compile Include="View\UserView.cs" />
   </ItemGroup>
   <ItemGroup>

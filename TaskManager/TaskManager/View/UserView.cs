@@ -15,19 +15,20 @@ namespace TaskManager.View
         public void Show()
         {
             Console.Clear();
-            UserViewEnum choice = RenderMenu();
             while (true)
             {
+                UserViewEnum choice = RenderMenu();
                 switch (choice)
                 {
+                    case UserViewEnum.MyTasks:
+                        {
+                            TaskManagerView taskManagerView = new TaskManagerView();
+                            taskManagerView.Show();
+                            break;
+                        }
                     case UserViewEnum.Add:
                         {
                             Add();
-                            break;
-                        }
-                    case UserViewEnum.View:
-                        {
-                            View();
                             break;
                         }
                     case UserViewEnum.Update:
@@ -53,7 +54,7 @@ namespace TaskManager.View
             Console.Clear();
             TaskEntity task = new TaskEntity();
             task.ParentUserId = AuthenticationService.LoggedUser.Id;
-            Console.WriteLine("Delete task: ");
+            Console.WriteLine("Create task: ");
             Console.Write("Please write task name: ");
             task.Name = Console.ReadLine();
             Console.Write("Please write task description: ");
@@ -67,13 +68,6 @@ namespace TaskManager.View
             taskRepo.Save(task);
             Console.WriteLine("Task saved successfully!");
             Console.ReadKey(true);
-        }
-
-
-        private void View()
-        {
-            Console.Clear();
-            Console.Write("Please enter task id: ");//todo
         }
 
         private void Delete()
@@ -98,7 +92,48 @@ namespace TaskManager.View
 
         private void Update()
         {
-         
+            Console.Clear();
+            Console.WriteLine("Update task");
+            Console.Write("Please enter task id: ");
+            int inputId = Int32.Parse(Console.ReadLine());
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            TaskEntity task = taskRepo.GetById(inputId);
+            if (task==null)
+            {
+                Console.Clear();
+                Console.WriteLine("Task doesn't exist!");
+                Console.ReadKey(true);
+                return;
+            }
+            Console.WriteLine("Task name: {0}",task.Name);
+            Console.Write("Please enter new task name: ");
+            string newName = Console.ReadLine();
+            Console.WriteLine("Task description: {0}",task.Description);
+            Console.Write("Please enter new task description: ");
+            string newDescription = Console.ReadLine();
+            Console.WriteLine("Task estimated time: {0}",task.EstimatedTime);
+            Console.Write("Please enter new estimated time: ");
+            string newEstimatedTime = Console.ReadLine();
+            Console.WriteLine("Person(id) that will make the task: {0}",task.MakerID);
+            Console.Write("Please enter new person(id) that will make the task: ");
+            string newMakerId = Console.ReadLine();
+            Console.WriteLine("Is task done?: {0}",task.IsDone);
+            Console.Write("Please enter if task is done?(true or false): ");
+            string newIsDone = Console.ReadLine();
+            if (!string.IsNullOrEmpty(newName))
+                task.Name = newName;
+            if (!string.IsNullOrEmpty(newDescription))
+                task.Description = newDescription;
+            if (!string.IsNullOrEmpty(newEstimatedTime))
+                task.EstimatedTime = Int32.Parse(newEstimatedTime);
+            if (!string.IsNullOrEmpty(newMakerId))
+                task.MakerID = Int32.Parse(newMakerId);
+            if (!string.IsNullOrEmpty(newIsDone))
+                task.IsDone = Convert.ToBoolean(newIsDone);
+            task.DateLastUpdated = DateTime.Now;
+            taskRepo.Save(task);
+            Console.WriteLine("Task updated successfully!");
+            Console.ReadKey(true);
         }
 
         
@@ -108,14 +143,19 @@ namespace TaskManager.View
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("User view");
+                Console.WriteLine("User view:");
+                Console.WriteLine("My [t]asks");
                 Console.WriteLine("[C]reate a task");
                 Console.WriteLine("[D]elete a task");
                 Console.WriteLine("[U]pdate a task");
-                Console.WriteLine("[V]iew a task");
+                Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
                 {
+                    case "T":
+                        {
+                            return UserViewEnum.MyTasks; 
+                        }
                     case "C":
                         {
                             return UserViewEnum.Add;
@@ -127,10 +167,6 @@ namespace TaskManager.View
                     case "U":
                         {
                             return UserViewEnum.Update;
-                        }
-                    case "V":
-                        {
-                            return UserViewEnum.View;
                         }
                     case "X":
                         {
