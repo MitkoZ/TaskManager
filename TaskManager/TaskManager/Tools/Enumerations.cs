@@ -29,6 +29,7 @@ namespace TaskManager.Tools
     {
         CreatedTasks=1,
         ShouldMakeTasks=2,
-        Exit=3
+        CountTime=3,
+        Exit=4
     }
 }

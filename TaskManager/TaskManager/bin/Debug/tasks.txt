@@ -26,11 +26,11 @@ updateDescription
 29.04.2017 г. 16:32:26 ч.
 False
 4
-goshoGoshevProject
-goshoDescription
-15
-3
+TaskCreatedByPetar
+PetarDescription
+12
 2
-29.04.2017 г. 16:25:51 ч.
-29.04.2017 г. 16:32:26 ч.
+3
+29.04.2017 г. 23:36:09 ч.
+01.01.0001 г. 00:00:00 ч.
 False
