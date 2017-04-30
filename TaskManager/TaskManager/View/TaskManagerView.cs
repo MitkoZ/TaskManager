@@ -40,6 +40,21 @@ namespace TaskManager.View
                             ChangeStatusCreated();
                             break;
                         }
+                    case TaskManagerViewEnum.ChangeStatusToMake:
+                        {
+                            ChangeStatusToMake();
+                            break;
+                        }
+                    case TaskManagerViewEnum.MakeComment:
+                        {
+                            MakeComment();
+                            break;
+                        }
+                    case TaskManagerViewEnum.ViewComments:
+                        {
+                            ViewComments();
+                            break;
+                        }
                     case TaskManagerViewEnum.Exit:
                         {
                             return;
@@ -84,6 +99,9 @@ namespace TaskManager.View
                 Console.WriteLine("Tasks that I should [M]ake");
                 Console.WriteLine("Count [T]ime for a task");
                 Console.WriteLine("Change the status for a created task (from done to [N]ot done)");
+                Console.WriteLine("Change the status for a task that you should make (from not done to [D]one)");
+                Console.WriteLine("Make a C[o]mment");
+                Console.WriteLine("Vi[e]w a Comment");
                 Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
@@ -103,6 +121,18 @@ namespace TaskManager.View
                     case "N":
                         {
                             return TaskManagerViewEnum.ChangeStatusCreated;
+                        }
+                    case "D":
+                        {
+                            return TaskManagerViewEnum.ChangeStatusToMake;
+                        }
+                    case "O":
+                        {
+                            return TaskManagerViewEnum.MakeComment;
+                        }
+                    case "E":
+                        {
+                            return TaskManagerViewEnum.ViewComments;
                         }
                     case "X":
                         {
@@ -128,6 +158,7 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
+            Console.WriteLine("Tasks To Make");
             foreach (TaskEntity task in shouldMakeTasks)
             {
                 Console.WriteLine("Id: {0}",task.Id);
@@ -218,6 +249,164 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
+        }
+
+        public void ChangeStatusToMake() //changes the status of a task that the user has to make to "done"
+        {
+            Console.Clear();
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            List<TaskEntity> toMakeTasks = taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id);
+            if (toMakeTasks.Count == 0)
+            {
+                Console.WriteLine("You don't have any tasks to make");
+                Console.ReadKey(true);
+                return;
+            }
+            ViewToMake();
+            Console.Write("Please enter the id of the task that you would want to change the status of: ");
+            int idInput = Int32.Parse(Console.ReadLine());
+            for (int i = 0; i < toMakeTasks.Count; i++)
+            {
+                if (toMakeTasks[i].Id == idInput)
+                {
+                    if (toMakeTasks[i].IsDone==false)
+                    {
+                        toMakeTasks[i].IsDone = true;
+                        Console.WriteLine("Please write a comment:");
+                        string comment = Console.ReadLine();
+                        CommentEntity commentEntity = new CommentEntity();
+                        commentEntity.Comment = comment;
+                        commentEntity.TaskId = idInput;
+                        commentEntity.ParentUserId = AuthenticationService.LoggedUser.Id;
+                        CommentRepository commentRepo = new CommentRepository("comments.txt");
+                        commentRepo.Save(commentEntity);
+                        taskRepo.Save(toMakeTasks[i]);
+                        Console.WriteLine("Comment saved successfully!");
+                        Console.ReadKey(true);
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("This task is already done");
+                        Console.ReadKey(true);
+                        return;
+                    }
+                }
+            }
+            if (true)
+            {
+                Console.WriteLine("Invalid task id");
+                Console.ReadKey(true);
+                return;
+            }
+        }
+
+
+        public void MakeComment()
+        {
+            Console.Clear();
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            List<TaskEntity> tasksList = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            tasksList.AddRange(taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id));
+            foreach (TaskEntity task in tasksList)
+            {
+                Console.WriteLine("Task id: "+task.Id);
+                Console.WriteLine("Task name: "+task.Name);
+                Console.WriteLine("#####################################");
+            }
+            Console.Write("Please enter task id: ");
+            int idInput = Int32.Parse(Console.ReadLine());
+            for (int i = 0; i < tasksList.Count; i++)
+            {
+                if (tasksList[i].Id==idInput)
+                {
+                    CommentRepository commentRepo = new CommentRepository("comments.txt");
+                    CommentEntity commentEntity = new CommentEntity();
+                    commentEntity.ParentUserId = AuthenticationService.LoggedUser.Id;
+                    commentEntity.TaskId = idInput;
+                    Console.WriteLine("Please write a comment:");
+                    commentEntity.Comment = Console.ReadLine();
+                    commentRepo.Save(commentEntity);
+                    Console.WriteLine("Comment saved successfully");
+                    Console.ReadKey(true);
+                    return;
+                }
+            }
+            if (true)
+            {
+                Console.WriteLine("Invalid task id");
+                Console.ReadKey(true);
+                return;
+            }
+        }
+
+        public void ViewComments()
+        {
+            Console.Clear();
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            List<TaskEntity> myTasksList = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            myTasksList.AddRange(taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id));
+            CommentRepository commentRepo = new CommentRepository("comments.txt");
+            List<CommentEntity> allCommentsList=commentRepo.GetAll();
+            if (myTasksList.Count!=0)
+            {
+                foreach (TaskEntity task in myTasksList)
+                {
+                    Console.WriteLine(task.Id);
+                    Console.WriteLine(task.Name);
+                    Console.WriteLine("################################");
+                }
+            }
+            else
+            {
+                Console.WriteLine("You don't have any tasks");
+                Console.ReadKey(true);
+                return;
+            }
+            Console.Write("Please enter task id: ");
+            int idInput = Int32.Parse(Console.ReadLine());
+            bool idExists = false;
+            for (int i = 0; i < myTasksList.Count; i++)
+            {
+                if (myTasksList[i].Id==idInput)
+                {
+                    idExists = true;
+                    break;
+                }
+            }
+            if (idExists==false)
+            {
+                Console.WriteLine("Invalid task id");
+                Console.ReadKey(true);
+                return;
+            }
+            List<CommentEntity> currentTaskComments = new List<CommentEntity>();
+            CommentEntity commentEntity = new CommentEntity();
+            FileStream fileStream = new FileStream("comments.txt", FileMode.Open);
+            StreamReader streamReader = new StreamReader(fileStream);
+            while (!streamReader.EndOfStream)
+            { 
+                commentRepo.PopulateEntity(commentEntity, streamReader);
+                if (commentEntity.TaskId==idInput)
+                {
+                    currentTaskComments.Add(new CommentEntity { ParentUserId = commentEntity.ParentUserId, Comment = commentEntity.Comment });
+                }
+            }
+            if (currentTaskComments.Count==0)
+            {
+                Console.WriteLine("This tasks doesn't have any comments");
+                Console.ReadKey(true);
+                return;
+            }
+            Console.Clear();
+            foreach (CommentEntity comment in currentTaskComments)
+            {
+                Console.WriteLine("Commenter id: "+comment.ParentUserId);
+                Console.WriteLine("Comment: "+comment.Comment);
+            }
+            Console.ReadKey(true);
+            fileStream.Close();
+            streamReader.Close();
         }
     }
 }

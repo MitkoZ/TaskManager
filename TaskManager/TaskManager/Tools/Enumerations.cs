@@ -13,7 +13,8 @@ namespace TaskManager.Tools
         Delete=3,
         View=4,
         Exit=5,
-        GetAll=6
+        GetAll=6,
+        OrdinaryUserView=7
     }
 
     public enum UserViewEnum
@@ -31,6 +32,9 @@ namespace TaskManager.Tools
         ToMakeTasks=2,
         CountTime=3,
         ChangeStatusCreated=4,
-        Exit =5
+        ChangeStatusToMake=5,
+        MakeComment=6,
+        ViewComments=7,
+        Exit =8
     }
 }

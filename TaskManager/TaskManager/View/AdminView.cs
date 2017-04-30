@@ -45,12 +45,17 @@ namespace TaskManager.View
                             View();
                             break;
                         }
+                    case AdminViewEnum.OrdinaryUserView:
+                        {
+                            UserView userView = new UserView();
+                            userView.Show();
+                            break;
+                        }
                     case AdminViewEnum.Exit:
                         {
                             return;
                         }
                 }
-                Console.ReadKey(true);
             }
         }
 
@@ -66,6 +71,7 @@ namespace TaskManager.View
                 Console.WriteLine("Password: "+user.Password);
                 Console.WriteLine("Is Admin: "+user.isAdmin);
             }
+            Console.ReadKey(true);
         }
 
         private void Delete()
@@ -85,6 +91,7 @@ namespace TaskManager.View
                 userRepo.Delete(user);
                 Console.WriteLine("User deleted successfully.");
             }
+            Console.ReadKey(true);
         }
         
         private void Update() //by id
@@ -116,6 +123,7 @@ namespace TaskManager.View
             }
             adminRepo.Save(oldUser);
             Console.WriteLine("User changed!");
+            Console.ReadKey(true);
         }
 
         private void Add()
@@ -134,6 +142,7 @@ namespace TaskManager.View
             adminRepo.WriteEntity(userInput, streamWriter);
             Console.WriteLine("User added!");
             streamWriter.Close();
+            Console.ReadKey(true);
         }
 
         private void View()
@@ -146,6 +155,7 @@ namespace TaskManager.View
             Console.WriteLine("Username: " + user.Username);
             Console.WriteLine("Password: " + user.Password);
             Console.WriteLine("Is Admin?: " + user.isAdmin);
+            Console.ReadKey(true);
         }
         
         private AdminViewEnum RenderMenu()
@@ -159,6 +169,7 @@ namespace TaskManager.View
                 Console.WriteLine("[E]dit a user");
                 Console.WriteLine("[D]elete a user");
                 Console.WriteLine("[V]iew a user");
+                Console.WriteLine("[O]rdinary user view");
                 Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
@@ -182,6 +193,10 @@ namespace TaskManager.View
                     case "V":
                         {
                             return AdminViewEnum.View;
+                        }
+                    case "O":
+                        {
+                            return AdminViewEnum.OrdinaryUserView;
                         }
                     case "X":
                         {

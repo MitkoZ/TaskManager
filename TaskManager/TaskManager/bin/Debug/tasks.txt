@@ -15,7 +15,7 @@ somerandomdescription
 3
 29.04.2017 г. 16:24:39 ч.
 01.01.0001 г. 00:00:00 ч.
-False
+True
 3
 updatedProject
 updateDescription
