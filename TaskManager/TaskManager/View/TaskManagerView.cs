@@ -25,14 +25,19 @@ namespace TaskManager.View
                             ViewCreated();
                             break;
                         }
-                    case TaskManagerViewEnum.ShouldMakeTasks:
+                    case TaskManagerViewEnum.ToMakeTasks:
                         {
-                            ViewShouldMake();
+                            ViewToMake();
                             break;
                         }
                     case TaskManagerViewEnum.CountTime:
                         {
                             CountTime();
+                            break;
+                        }
+                    case TaskManagerViewEnum.ChangeStatusCreated:
+                        {
+                            ChangeStatusCreated();
                             break;
                         }
                     case TaskManagerViewEnum.Exit:
@@ -45,7 +50,7 @@ namespace TaskManager.View
 
         private void CountTime()
         {
-            ViewShouldMake();
+            ViewToMake();
             Console.Write("Please enter task id: ");
             int idInput = Int32.Parse(Console.ReadLine());
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
@@ -78,6 +83,7 @@ namespace TaskManager.View
                 Console.WriteLine("Tasks that I [C]reated");
                 Console.WriteLine("Tasks that I should [M]ake");
                 Console.WriteLine("Count [T]ime for a task");
+                Console.WriteLine("Change the status for a created task (from done to [N]ot done)");
                 Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
@@ -88,11 +94,15 @@ namespace TaskManager.View
                         }
                     case "M":
                         {
-                            return TaskManagerViewEnum.ShouldMakeTasks;
+                            return TaskManagerViewEnum.ToMakeTasks;
                         }
                     case "T":
                         {
                             return TaskManagerViewEnum.CountTime;
+                        }
+                    case "N":
+                        {
+                            return TaskManagerViewEnum.ChangeStatusCreated;
                         }
                     case "X":
                         {
@@ -107,12 +117,12 @@ namespace TaskManager.View
                 }
             }
         }
-        private void ViewShouldMake() //the tasks that the user has to do
+        private void ViewToMake() //the tasks that the user has to do
         {
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
             List<TaskEntity> shouldMakeTasks = taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id);
-            if (shouldMakeTasks.Capacity == 0)
+            if (shouldMakeTasks.Count == 0)
             {
                 Console.WriteLine("You don't have any tasks to do");
                 Console.ReadKey(true);
@@ -128,7 +138,7 @@ namespace TaskManager.View
                 Console.WriteLine("Date created: {0}", task.DateCreated);
                 Console.WriteLine("Date last updated: {0}", task.DateLastUpdated);
                 Console.WriteLine("Is done? {0}", task.IsDone);
-                Console.WriteLine("####################################");
+                Console.WriteLine("########################################################################");
             }
             Console.ReadKey(true);
         }
@@ -138,12 +148,13 @@ namespace TaskManager.View
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
             List<TaskEntity> createdTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
-            if (createdTasks.Capacity == 0)
+            if (createdTasks.Count == 0)
             {
                 Console.WriteLine("You don't have any created tasks");
                 Console.ReadKey(true);
                 return;
             }
+            Console.WriteLine("Created Tasks");
             foreach (TaskEntity task in createdTasks)
             {
                 Console.WriteLine("Id: {0}",task.Id);
@@ -154,33 +165,59 @@ namespace TaskManager.View
                 Console.WriteLine("Date created: {0}",task.DateCreated);
                 Console.WriteLine("Date last updated: {0}", task.DateLastUpdated);
                 Console.WriteLine("Is done? {0}", task.IsDone);
-                Console.WriteLine("####################################");
+                Console.WriteLine("########################################################################");
             }
             Console.ReadKey(true);
         }
 
-        public void ChangeStatusCreated() //changes the status of a task that has been created by the user
+        public void ChangeStatusCreated() //changes the status of a task that has been created by the user to "not done"
         {
             Console.Clear();
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            List<TaskEntity> createdTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            if (createdTasks.Count==0)
+            {
+                Console.WriteLine("You don't have any created tasks");
+                Console.ReadKey(true);
+                return;
+            }
             ViewCreated();
             Console.Write("Please enter the id of the task that you would want to change the status of: ");
             int idInput=Int32.Parse(Console.ReadLine());
-            TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> createdTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
             for (int i = 0; i < createdTasks.Count; i++)
             {
                 if (createdTasks[i].Id == idInput)
                 {
-                    createdTasks[i].IsDone = false;
-                    Console.WriteLine("Please write a comment:");
-                    Comment();//todo
+                    if (createdTasks[i].IsDone)
+                    {
+                        createdTasks[i].IsDone = false;
+                        Console.WriteLine("Please write a comment:");
+                        string comment = Console.ReadLine();
+                        CommentEntity commentEntity = new CommentEntity();
+                        commentEntity.Comment = comment;
+                        commentEntity.TaskId = idInput;
+                        commentEntity.ParentUserId = AuthenticationService.LoggedUser.Id;
+                        CommentRepository commentRepo = new CommentRepository("comments.txt");
+                        commentRepo.Save(commentEntity);
+                        taskRepo.Save(createdTasks[i]);
+                        Console.WriteLine("Comment saved successfully!");
+                        Console.ReadKey(true);
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("This task is not done");
+                        Console.ReadKey(true);
+                        return;
+                    }    
                 }
             }
-        }
-        
-        private void Comment()//todo
-        {
-            Console.ReadLine();
+            if (true)
+            {
+                Console.WriteLine("Invalid task id");
+                Console.ReadKey(true);
+                return;
+            }
         }
     }
 }

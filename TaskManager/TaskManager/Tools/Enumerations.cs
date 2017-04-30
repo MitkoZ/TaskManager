@@ -28,8 +28,9 @@ namespace TaskManager.Tools
     public enum TaskManagerViewEnum
     {
         CreatedTasks=1,
-        ShouldMakeTasks=2,
+        ToMakeTasks=2,
         CountTime=3,
-        Exit=4
+        ChangeStatusCreated=4,
+        Exit =5
     }
 }

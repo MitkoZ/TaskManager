@@ -65,7 +65,6 @@ namespace TaskManager.Repository
                 streamReader.Close();
                 inputFileStream.Close();
             }
-
             File.Delete(filePath);
             File.Move(tempFilePath, filePath);
         }
