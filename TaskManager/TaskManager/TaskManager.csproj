@@ -57,9 +57,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Enumerations.cs" />
+    <Compile Include="View\AdminFrontView.cs" />
     <Compile Include="View\AdminView.cs" />
+    <Compile Include="View\CommentManagementView.cs" />
     <Compile Include="View\LoginView.cs" />
-    <Compile Include="View\TaskManagerView.cs" />
+    <Compile Include="View\TaskManagementView.cs" />
     <Compile Include="View\UserView.cs" />
   </ItemGroup>
   <ItemGroup>

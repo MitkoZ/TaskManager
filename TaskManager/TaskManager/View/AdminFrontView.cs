@@ -7,29 +7,28 @@ using TaskManager.Tools;
 
 namespace TaskManager.View
 {
-    class UserView
+    class AdminFrontView
     {
         public void Show()
         {
             while (true)
             {
-                Console.Clear();
-                UserViewEnum choice = RenderMenu();
+                AdminFrontViewEnum choice = RenderMenu();
                 switch (choice)
                 {
-                    case UserViewEnum.TaskManagement:
+                    case AdminFrontViewEnum.AdminView:
                         {
-                            TaskManagementView taskManagementView = new View.TaskManagementView();
-                            taskManagementView.Show();
+                            AdminView adminView = new AdminView();
+                            adminView.Show();
                             break;
                         }
-                    case UserViewEnum.CommentManagement:
+                    case AdminFrontViewEnum.OrdinaryUserView:
                         {
-                            CommentManagementView commentManagementView = new CommentManagementView();
-                            commentManagementView.Show();
+                            UserView userView = new UserView();
+                            userView.Show();
                             break;
                         }
-                    case UserViewEnum.Exit:
+                    case AdminFrontViewEnum.Exit:
                         {
                             return;
                         }
@@ -37,28 +36,28 @@ namespace TaskManager.View
             }
         }
 
-        private UserViewEnum RenderMenu()
+        private AdminFrontViewEnum RenderMenu()
         {
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("[T]ask management");
-                Console.WriteLine("[C]omment management");
+                Console.WriteLine("[A]dmin view");
+                Console.WriteLine("[O]rdinary user view");
                 Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
                 {
-                    case "T":
+                    case "A":
                         {
-                            return UserViewEnum.TaskManagement;
+                            return AdminFrontViewEnum.AdminView;
                         }
-                    case "C":
+                    case "O":
                         {
-                            return UserViewEnum.CommentManagement;
+                            return AdminFrontViewEnum.OrdinaryUserView;
                         }
                     case "X":
                         {
-                            return UserViewEnum.Exit;
+                            return AdminFrontViewEnum.Exit;
                         }
                     default:
                         {

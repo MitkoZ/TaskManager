@@ -10,52 +10,57 @@ using TaskManager.Tools;
 
 namespace TaskManager.View
 {
-    class TaskManagerView
+    class TaskManagementView
     {
         public void Show()
         {
             while (true)
             {
                 Console.Clear();
-                TaskManagerViewEnum choice=RenderMenu();
+                TaskManagementViewEnum choice=RenderMenu();
                 switch (choice)
                 {
-                    case TaskManagerViewEnum.CreatedTasks:
+                    case TaskManagementViewEnum.Add:
+                        {
+                            Add();
+                            break;
+                        }
+                    case TaskManagementViewEnum.Delete:
+                        {
+                            Delete();
+                            break;
+                        }
+                    case TaskManagementViewEnum.Update:
+                        {
+                            Update();
+                            break;
+                        }
+                    case TaskManagementViewEnum.CreatedTasks:
                         {
                             ViewCreated();
                             break;
                         }
-                    case TaskManagerViewEnum.ToMakeTasks:
+                    case TaskManagementViewEnum.ToMakeTasks:
                         {
                             ViewToMake();
                             break;
                         }
-                    case TaskManagerViewEnum.CountTime:
+                    case TaskManagementViewEnum.CountTime:
                         {
                             CountTime();
                             break;
                         }
-                    case TaskManagerViewEnum.ChangeStatusCreated:
+                    case TaskManagementViewEnum.ChangeStatusCreated:
                         {
                             ChangeStatusCreated();
                             break;
                         }
-                    case TaskManagerViewEnum.ChangeStatusToMake:
+                    case TaskManagementViewEnum.ChangeStatusToMake:
                         {
                             ChangeStatusToMake();
                             break;
                         }
-                    case TaskManagerViewEnum.MakeComment:
-                        {
-                            MakeComment();
-                            break;
-                        }
-                    case TaskManagerViewEnum.ViewComments:
-                        {
-                            ViewComments();
-                            break;
-                        }
-                    case TaskManagerViewEnum.Exit:
+                    case TaskManagementViewEnum.Exit:
                         {
                             return;
                         }
@@ -90,53 +95,59 @@ namespace TaskManager.View
             }
         }
 
-        private TaskManagerViewEnum RenderMenu()
+        private TaskManagementViewEnum RenderMenu()
         {
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine("Task Management");
+                Console.WriteLine("C[r]eate a task");
+                Console.WriteLine("D[e]lete a task");
+                Console.WriteLine("[U]pdate a task");
                 Console.WriteLine("Tasks that I [C]reated");
                 Console.WriteLine("Tasks that I should [M]ake");
                 Console.WriteLine("Count [T]ime for a task");
                 Console.WriteLine("Change the status for a created task (from done to [N]ot done)");
                 Console.WriteLine("Change the status for a task that you should make (from not done to [D]one)");
-                Console.WriteLine("Make a C[o]mment");
-                Console.WriteLine("Vi[e]w a Comment");
                 Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
                 {
-                    case "C":
+                    case "R":
                         {
-                            return TaskManagerViewEnum.CreatedTasks;
-                        }
-                    case "M":
-                        {
-                            return TaskManagerViewEnum.ToMakeTasks;
-                        }
-                    case "T":
-                        {
-                            return TaskManagerViewEnum.CountTime;
-                        }
-                    case "N":
-                        {
-                            return TaskManagerViewEnum.ChangeStatusCreated;
-                        }
-                    case "D":
-                        {
-                            return TaskManagerViewEnum.ChangeStatusToMake;
-                        }
-                    case "O":
-                        {
-                            return TaskManagerViewEnum.MakeComment;
+                            return TaskManagementViewEnum.Add;
                         }
                     case "E":
                         {
-                            return TaskManagerViewEnum.ViewComments;
+                            return TaskManagementViewEnum.Delete;
+                        }
+                    case "U":
+                        {
+                            return TaskManagementViewEnum.Update;
+                        }
+                    case "C":
+                        {
+                            return TaskManagementViewEnum.CreatedTasks;
+                        }
+                    case "M":
+                        {
+                            return TaskManagementViewEnum.ToMakeTasks;
+                        }
+                    case "T":
+                        {
+                            return TaskManagementViewEnum.CountTime;
+                        }
+                    case "N":
+                        {
+                            return TaskManagementViewEnum.ChangeStatusCreated;
+                        }
+                    case "D":
+                        {
+                            return TaskManagementViewEnum.ChangeStatusToMake;
                         }
                     case "X":
                         {
-                            return TaskManagerViewEnum.Exit;
+                            return TaskManagementViewEnum.Exit;
                         }
                     default:
                         {
@@ -158,6 +169,7 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
+            UsersRepository userRepo = new UsersRepository("users.txt");
             Console.WriteLine("Tasks To Make");
             foreach (TaskEntity task in shouldMakeTasks)
             {
@@ -165,7 +177,7 @@ namespace TaskManager.View
                 Console.WriteLine("Name: {0}", task.Name);
                 Console.WriteLine("Description: {0}", task.Description);
                 Console.WriteLine("Estimated time: {0}", task.EstimatedTime);
-                Console.WriteLine("The person that gave me the task(id): {0}", task.ParentUserId);
+                Console.WriteLine("The person that gave me the task: {0}", userRepo.GetById(task.ParentUserId).Username);
                 Console.WriteLine("Date created: {0}", task.DateCreated);
                 Console.WriteLine("Date last updated: {0}", task.DateLastUpdated);
                 Console.WriteLine("Is done? {0}", task.IsDone);
@@ -185,6 +197,7 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
+            UsersRepository userRepo = new UsersRepository("users.txt");
             Console.WriteLine("Created Tasks");
             foreach (TaskEntity task in createdTasks)
             {
@@ -192,7 +205,7 @@ namespace TaskManager.View
                 Console.WriteLine("Name: {0}",task.Name);
                 Console.WriteLine("Description: {0}", task.Description);
                 Console.WriteLine("Estimated time: {0}", task.EstimatedTime);
-                Console.WriteLine("The person that will make it(id): {0}",task.MakerID);
+                Console.WriteLine("The person that will make it: {0}",userRepo.GetById(task.MakerID).Username);
                 Console.WriteLine("Date created: {0}",task.DateCreated);
                 Console.WriteLine("Date last updated: {0}", task.DateLastUpdated);
                 Console.WriteLine("Is done? {0}", task.IsDone);
@@ -301,112 +314,95 @@ namespace TaskManager.View
             }
         }
 
-
-        public void MakeComment()
+        private void Add()
         {
             Console.Clear();
+            TaskEntity task = new TaskEntity();
+            task.ParentUserId = AuthenticationService.LoggedUser.Id;
+            Console.WriteLine("Create task: ");
+            Console.Write("Please write task name: ");
+            task.Name = Console.ReadLine();
+            Console.Write("Please write task description: ");
+            task.Description = Console.ReadLine();
+            Console.Write("Please write estimated task time: (in hours) ");
+            task.EstimatedTime = Int32.Parse(Console.ReadLine());
+            Console.Write("Please write the person who will make the task (by id): ");
+            task.MakerID = Int32.Parse(Console.ReadLine());
+            task.DateCreated = DateTime.Now;
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> tasksList = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
-            tasksList.AddRange(taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id));
-            foreach (TaskEntity task in tasksList)
-            {
-                Console.WriteLine("Task id: "+task.Id);
-                Console.WriteLine("Task name: "+task.Name);
-                Console.WriteLine("#####################################");
-            }
-            Console.Write("Please enter task id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
-            for (int i = 0; i < tasksList.Count; i++)
-            {
-                if (tasksList[i].Id==idInput)
-                {
-                    CommentRepository commentRepo = new CommentRepository("comments.txt");
-                    CommentEntity commentEntity = new CommentEntity();
-                    commentEntity.ParentUserId = AuthenticationService.LoggedUser.Id;
-                    commentEntity.TaskId = idInput;
-                    Console.WriteLine("Please write a comment:");
-                    commentEntity.Comment = Console.ReadLine();
-                    commentRepo.Save(commentEntity);
-                    Console.WriteLine("Comment saved successfully");
-                    Console.ReadKey(true);
-                    return;
-                }
-            }
-            if (true)
-            {
-                Console.WriteLine("Invalid task id");
-                Console.ReadKey(true);
-                return;
-            }
+            taskRepo.Save(task);
+            Console.WriteLine("Task saved successfully!");
+            Console.ReadKey(true);
         }
 
-        public void ViewComments()
+        private void Delete()
         {
             Console.Clear();
+            ViewCreated();
+            Console.WriteLine("Delete task");
+            Console.Write("Please enter task id: ");
+            int inputId = Int32.Parse(Console.ReadLine());
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> myTasksList = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
-            myTasksList.AddRange(taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id));
-            CommentRepository commentRepo = new CommentRepository("comments.txt");
-            List<CommentEntity> allCommentsList=commentRepo.GetAll();
-            if (myTasksList.Count!=0)
+            TaskEntity task = taskRepo.GetById(inputId);
+            if (task == null)
             {
-                foreach (TaskEntity task in myTasksList)
-                {
-                    Console.WriteLine(task.Id);
-                    Console.WriteLine(task.Name);
-                    Console.WriteLine("################################");
-                }
+                Console.WriteLine("Task doesn't exist!");
             }
             else
             {
-                Console.WriteLine("You don't have any tasks");
-                Console.ReadKey(true);
-                return;
-            }
-            Console.Write("Please enter task id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
-            bool idExists = false;
-            for (int i = 0; i < myTasksList.Count; i++)
-            {
-                if (myTasksList[i].Id==idInput)
-                {
-                    idExists = true;
-                    break;
-                }
-            }
-            if (idExists==false)
-            {
-                Console.WriteLine("Invalid task id");
-                Console.ReadKey(true);
-                return;
-            }
-            List<CommentEntity> currentTaskComments = new List<CommentEntity>();
-            CommentEntity commentEntity = new CommentEntity();
-            FileStream fileStream = new FileStream("comments.txt", FileMode.Open);
-            StreamReader streamReader = new StreamReader(fileStream);
-            while (!streamReader.EndOfStream)
-            { 
-                commentRepo.PopulateEntity(commentEntity, streamReader);
-                if (commentEntity.TaskId==idInput)
-                {
-                    currentTaskComments.Add(new CommentEntity { ParentUserId = commentEntity.ParentUserId, Comment = commentEntity.Comment });
-                }
-            }
-            if (currentTaskComments.Count==0)
-            {
-                Console.WriteLine("This tasks doesn't have any comments");
-                Console.ReadKey(true);
-                return;
-            }
-            Console.Clear();
-            foreach (CommentEntity comment in currentTaskComments)
-            {
-                Console.WriteLine("Commenter id: "+comment.ParentUserId);
-                Console.WriteLine("Comment: "+comment.Comment);
+                taskRepo.Delete(task);
+                Console.WriteLine("Task deleted successfully!");
             }
             Console.ReadKey(true);
-            fileStream.Close();
-            streamReader.Close();
         }
+
+        private void Update()
+        {
+            Console.Clear();
+            Console.WriteLine("Update task");
+            Console.Write("Please enter task id: ");
+            int inputId = Int32.Parse(Console.ReadLine());
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            TaskEntity task = taskRepo.GetById(inputId);
+            if (task == null)
+            {
+                Console.Clear();
+                Console.WriteLine("Task doesn't exist!");
+                Console.ReadKey(true);
+                return;
+            }
+            Console.WriteLine("Task name: {0}", task.Name);
+            Console.Write("Please enter new task name: ");
+            string newName = Console.ReadLine();
+            Console.WriteLine("Task description: {0}", task.Description);
+            Console.Write("Please enter new task description: ");
+            string newDescription = Console.ReadLine();
+            Console.WriteLine("Task estimated time: {0}", task.EstimatedTime);
+            Console.Write("Please enter new estimated time: ");
+            string newEstimatedTime = Console.ReadLine();
+            Console.WriteLine("Person(id) that will make the task: {0}", task.MakerID);
+            Console.Write("Please enter new person(id) that will make the task: ");
+            string newMakerId = Console.ReadLine();
+            Console.WriteLine("Is task done?: {0}", task.IsDone);
+            Console.Write("Please enter if task is done?(true or false): ");
+            string newIsDone = Console.ReadLine();
+            if (!string.IsNullOrEmpty(newName))
+                task.Name = newName;
+            if (!string.IsNullOrEmpty(newDescription))
+                task.Description = newDescription;
+            if (!string.IsNullOrEmpty(newEstimatedTime))
+                task.EstimatedTime = Int32.Parse(newEstimatedTime);
+            if (!string.IsNullOrEmpty(newMakerId))
+                task.MakerID = Int32.Parse(newMakerId);
+            if (!string.IsNullOrEmpty(newIsDone))
+                task.IsDone = Convert.ToBoolean(newIsDone);
+            task.DateLastUpdated = DateTime.Now;
+            taskRepo.Save(task);
+            Console.WriteLine("Task updated successfully!");
+            Console.ReadKey(true);
+        }
+
+
+
     }
 }

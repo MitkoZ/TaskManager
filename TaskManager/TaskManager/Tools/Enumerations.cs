@@ -6,35 +6,47 @@ using System.Threading.Tasks;
 
 namespace TaskManager.Tools
 {
+    public enum AdminFrontViewEnum
+    {
+        AdminView=1,
+        OrdinaryUserView = 2,
+        Exit = 3
+    }
+
     public enum AdminViewEnum
     {
         Add=1,
         Update=2,
         Delete=3,
         View=4,
-        Exit=5,
-        GetAll=6,
-        OrdinaryUserView=7
+        GetAll=5,
+        Exit = 6
     }
 
     public enum UserViewEnum
     {
-        MyTasks=1,
-        Add=2,
-        Delete=3,
-        Update=4,
-        Exit=5
+        TaskManagement=1,
+        CommentManagement=2,
+        Exit=3
     }
 
-    public enum TaskManagerViewEnum
+    public enum TaskManagementViewEnum
     {
-        CreatedTasks=1,
-        ToMakeTasks=2,
-        CountTime=3,
-        ChangeStatusCreated=4,
-        ChangeStatusToMake=5,
-        MakeComment=6,
-        ViewComments=7,
-        Exit =8
+        Add = 1,
+        Delete = 2,
+        Update = 3,
+        CreatedTasks =4,
+        ToMakeTasks=5,
+        CountTime=6,
+        ChangeStatusCreated=7,
+        ChangeStatusToMake=8,
+        Exit =9
+    }
+
+    public enum CommentManagementViewEnum
+    {
+        MakeComment = 1,
+        ViewComments = 2,
+        Exit = 3
     }
 }

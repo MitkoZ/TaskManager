@@ -15,8 +15,8 @@ namespace TaskManager
             loginView.Show();
             if (AuthenticationService.LoggedUser.isAdmin)
             {
-                AdminView adminView = new AdminView();
-                adminView.Show();
+                AdminFrontView adminFrontView = new AdminFrontView();
+                adminFrontView.Show();
             }
             else
             {

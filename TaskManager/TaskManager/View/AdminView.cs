@@ -16,6 +16,7 @@ namespace TaskManager.View
         {
             while (true)
             {
+                Console.Clear();
                 AdminViewEnum choice = RenderMenu();
                 Console.Clear();
                 switch (choice)
@@ -45,12 +46,6 @@ namespace TaskManager.View
                             View();
                             break;
                         }
-                    case AdminViewEnum.OrdinaryUserView:
-                        {
-                            UserView userView = new UserView();
-                            userView.Show();
-                            break;
-                        }
                     case AdminViewEnum.Exit:
                         {
                             return;
@@ -78,6 +73,7 @@ namespace TaskManager.View
         {
             UsersRepository userRepo = new UsersRepository("users.txt");
             Console.Clear();
+            GetAll();
             Console.WriteLine("Delete user: ");
             Console.Write("Id: ");
             int id = Int32.Parse(Console.ReadLine());
@@ -97,6 +93,7 @@ namespace TaskManager.View
         private void Update() //by id
         {
             Console.Clear();
+            GetAll();
             UsersRepository adminRepo = new UsersRepository("users.txt");
             Console.Write("Enter user id: ");
             int idInput = Int32.Parse(Console.ReadLine());
@@ -148,8 +145,16 @@ namespace TaskManager.View
         private void View()
         {
             UsersRepository userRepo = new UsersRepository("users.txt");
+            List<User> users = userRepo.GetAll();
+            foreach (User item in users)
+            {
+                Console.WriteLine("Id: " + item.Id);
+                Console.WriteLine("Username: " + item.Username);
+                Console.WriteLine("#####################");
+            }
             Console.Write("Enter user id: ");
             int idInput = Int32.Parse(Console.ReadLine());
+            Console.Clear();
             User user = userRepo.GetById(idInput);
             Console.WriteLine("Id " + user.Id);
             Console.WriteLine("Username: " + user.Username);
@@ -169,7 +174,6 @@ namespace TaskManager.View
                 Console.WriteLine("[E]dit a user");
                 Console.WriteLine("[D]elete a user");
                 Console.WriteLine("[V]iew a user");
-                Console.WriteLine("[O]rdinary user view");
                 Console.WriteLine("E[x]it");
                 string choice = Console.ReadLine();
                 switch (choice.ToUpper())
@@ -193,10 +197,6 @@ namespace TaskManager.View
                     case "V":
                         {
                             return AdminViewEnum.View;
-                        }
-                    case "O":
-                        {
-                            return AdminViewEnum.OrdinaryUserView;
                         }
                     case "X":
                         {
