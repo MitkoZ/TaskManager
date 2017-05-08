@@ -50,3 +50,15 @@ it's not done
 9
 3
 TestComment
+14
+12
+4
+some comment
+15
+11
+4
+it's done
+16
+12
+4
+it's not done

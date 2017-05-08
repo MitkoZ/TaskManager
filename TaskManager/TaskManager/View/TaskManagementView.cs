@@ -70,11 +70,39 @@ namespace TaskManager.View
 
         private void CountTime()
         {
-            ViewToMake();
-            Console.Write("Please enter task id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
             List<TaskEntity> shouldMakeTasks = taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id);
+            if (shouldMakeTasks.Count==0)
+            {
+                Console.WriteLine("You don't have any tasks to make");
+                Console.ReadKey(true);
+                return;
+            }
+            ViewToMake();
+            Console.Write("Please enter task id: ");
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            if (!(shouldMakeTasks.Any(t=>t.Id==idInput)))
+            {
+                Console.WriteLine("You don't have a task with this id");
+                Console.ReadKey(true);
+                return;
+            }
             for (int i = 0; i < shouldMakeTasks.Count; i++)
             {
                 if (shouldMakeTasks[i].Id==idInput)
@@ -227,7 +255,23 @@ namespace TaskManager.View
             }
             ViewCreated();
             Console.Write("Please enter the id of the task that you would want to change the status of: ");
-            int idInput=Int32.Parse(Console.ReadLine());
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             for (int i = 0; i < createdTasks.Count; i++)
             {
                 if (createdTasks[i].Id == idInput)
@@ -277,7 +321,23 @@ namespace TaskManager.View
             }
             ViewToMake();
             Console.Write("Please enter the id of the task that you would want to change the status of: ");
-            int idInput = Int32.Parse(Console.ReadLine());
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             for (int i = 0; i < toMakeTasks.Count; i++)
             {
                 if (toMakeTasks[i].Id == idInput)
@@ -322,12 +382,47 @@ namespace TaskManager.View
             Console.WriteLine("Create task: ");
             Console.Write("Please write task name: ");
             task.Name = Console.ReadLine();
+            if (task.Name==string.Empty)
+            {
+                Console.WriteLine("Invalid task name");
+                Console.ReadKey(true);
+                return;
+            }
             Console.Write("Please write task description: ");
             task.Description = Console.ReadLine();
+            if (task.Description == string.Empty)
+            {
+                Console.WriteLine("Invalid task description");
+                Console.ReadKey(true);
+                return;
+            }
             Console.Write("Please write estimated task time: (in hours) ");
-            task.EstimatedTime = Int32.Parse(Console.ReadLine());
+            try
+            {
+                task.EstimatedTime = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             Console.Write("Please write the person who will make the task (by id): ");
             task.MakerID = Int32.Parse(Console.ReadLine());
+            UsersRepository usersRepo = new UsersRepository("users.txt");
+            User userDatabase=usersRepo.GetById(task.MakerID);
+            if (userDatabase==null)
+            {
+                Console.WriteLine("A user with this id doesn't exist");
+                Console.ReadKey(true);
+                return;
+            }
             task.DateCreated = DateTime.Now;
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
             taskRepo.Save(task);
@@ -338,20 +433,47 @@ namespace TaskManager.View
         private void Delete()
         {
             Console.Clear();
+            TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            List<TaskEntity> tasksCreatedByMe = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            if (tasksCreatedByMe.Count==0)
+            {
+                Console.WriteLine("You don't have any tasks");
+                Console.ReadKey(true);
+                return;
+            }
             ViewCreated();
             Console.WriteLine("Delete task");
             Console.Write("Please enter task id: ");
-            int inputId = Int32.Parse(Console.ReadLine());
-            TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            TaskEntity task = taskRepo.GetById(inputId);
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }  
+            TaskEntity task = taskRepo.GetById(idInput);
             if (task == null)
             {
                 Console.WriteLine("Task doesn't exist!");
             }
-            else
+            else if (tasksCreatedByMe.Any(t => t.Id==idInput))
             {
                 taskRepo.Delete(task);
                 Console.WriteLine("Task deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("You don't have a task with this id");
             }
             Console.ReadKey(true);
         }
@@ -360,9 +482,33 @@ namespace TaskManager.View
         {
             Console.Clear();
             Console.WriteLine("Update task");
-            Console.Write("Please enter task id: ");
-            int inputId = Int32.Parse(Console.ReadLine());
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
+            List<TaskEntity> myTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            if (myTasks.Count==0)
+            {
+                Console.WriteLine("You don't have any created tasks");
+                Console.ReadKey(true);
+                return;
+            }
+            ViewCreated();
+            Console.Write("Please enter task id: ");
+            int inputId = 0;
+            try
+            {
+                inputId = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             TaskEntity task = taskRepo.GetById(inputId);
             if (task == null)
             {
@@ -371,38 +517,96 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
+            if (!(myTasks.Any(t => t.Id == inputId)))
+            {
+                Console.WriteLine("You don't have a task with this id");
+                Console.ReadKey(true);
+                return;
+            }
             Console.WriteLine("Task name: {0}", task.Name);
             Console.Write("Please enter new task name: ");
             string newName = Console.ReadLine();
+            if (newName==string.Empty)
+            {
+                Console.WriteLine("Invalid name");
+                Console.ReadKey(true);
+                return;
+            }
             Console.WriteLine("Task description: {0}", task.Description);
             Console.Write("Please enter new task description: ");
             string newDescription = Console.ReadLine();
+            if (newDescription==string.Empty)
+            {
+                Console.WriteLine("Invalid name");
+                Console.ReadKey(true);
+                return;
+            }
             Console.WriteLine("Task estimated time: {0}", task.EstimatedTime);
             Console.Write("Please enter new estimated time: ");
-            string newEstimatedTime = Console.ReadLine();
+            int newEstimatedTime = 0;
+            try
+            {
+                newEstimatedTime = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             Console.WriteLine("Person(id) that will make the task: {0}", task.MakerID);
             Console.Write("Please enter new person(id) that will make the task: ");
-            string newMakerId = Console.ReadLine();
+            int newMakerId = 0;
+            try
+            {
+                newMakerId = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             Console.WriteLine("Is task done?: {0}", task.IsDone);
             Console.Write("Please enter if task is done?(true or false): ");
-            string newIsDone = Console.ReadLine();
-            if (!string.IsNullOrEmpty(newName))
-                task.Name = newName;
-            if (!string.IsNullOrEmpty(newDescription))
-                task.Description = newDescription;
-            if (!string.IsNullOrEmpty(newEstimatedTime))
-                task.EstimatedTime = Int32.Parse(newEstimatedTime);
-            if (!string.IsNullOrEmpty(newMakerId))
-                task.MakerID = Int32.Parse(newMakerId);
-            if (!string.IsNullOrEmpty(newIsDone))
-                task.IsDone = Convert.ToBoolean(newIsDone);
+            bool newIsDone = false;
+            try
+            {
+                newIsDone = Convert.ToBoolean(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            task.Name = newName;
+            task.Description = newDescription;
+            task.EstimatedTime = newEstimatedTime;
+            task.MakerID = newMakerId;
+            task.IsDone = newIsDone;
             task.DateLastUpdated = DateTime.Now;
             taskRepo.Save(task);
             Console.WriteLine("Task updated successfully!");
             Console.ReadKey(true);
         }
-
-
-
     }
 }

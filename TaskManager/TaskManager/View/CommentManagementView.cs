@@ -84,7 +84,23 @@ namespace TaskManager.View
                 Console.WriteLine("#####################################");
             }
             Console.Write("Please enter task id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             for (int i = 0; i < tasksList.Count; i++)
             {
                 if (tasksList[i].Id == idInput)
@@ -133,7 +149,23 @@ namespace TaskManager.View
                 return;
             }
             Console.Write("Please enter task id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             bool idExists = false;
             for (int i = 0; i < myTasksList.Count; i++)
             {

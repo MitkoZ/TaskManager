@@ -76,8 +76,24 @@ namespace TaskManager.View
             GetAll();
             Console.WriteLine("Delete user: ");
             Console.Write("Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            User user = userRepo.GetById(id);
+            int idInput = 0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            User user = userRepo.GetById(idInput);
             if (user == null)
             {
                 Console.WriteLine("User not found");
@@ -96,9 +112,31 @@ namespace TaskManager.View
             GetAll();
             UsersRepository adminRepo = new UsersRepository("users.txt");
             Console.Write("Enter user id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
+            int idInput=0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             Console.Clear();
             User oldUser = adminRepo.GetById(idInput);
+            if (oldUser==null)
+            {
+                Console.WriteLine("A user with this id doesn't exist");
+                Console.ReadKey(true);
+                return;
+            }
             Console.Write("Enter new username: ");
             User userInput = new User();
             userInput.Username=Console.ReadLine();
@@ -128,10 +166,37 @@ namespace TaskManager.View
             User userInput = new Entity.User();
             Console.Write("Enter username: ");
             userInput.Username = Console.ReadLine();
+            if (userInput.Username==string.Empty)
+            {
+                Console.WriteLine("Invalid username");
+                Console.ReadKey(true);
+                return;
+            }
             Console.Write("Enter password: ");
             userInput.Password = Console.ReadLine();
+            if (userInput.Password == string.Empty)
+            {
+                Console.WriteLine("Invalid password");
+                Console.ReadKey(true);
+                return;
+            }
             Console.Write("Admin? (true or false)");
-            userInput.isAdmin = Convert.ToBoolean(Console.ReadLine());
+            try
+            {
+                userInput.isAdmin = Convert.ToBoolean(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             UsersRepository adminRepo = new UsersRepository("users.txt");
             userInput.Id= adminRepo.GetNextId();
             FileStream fileStream = new FileStream("users.txt", FileMode.Append);
@@ -153,9 +218,31 @@ namespace TaskManager.View
                 Console.WriteLine("#####################");
             }
             Console.Write("Enter user id: ");
-            int idInput = Int32.Parse(Console.ReadLine());
+            int idInput=0;
+            try
+            {
+                idInput = Int32.Parse(Console.ReadLine());
+            }
+            catch (FormatException formatEx)
+            {
+                Console.WriteLine(formatEx.Message);
+                Console.ReadKey(true);
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey(true);
+                return;
+            }
             Console.Clear();
             User user = userRepo.GetById(idInput);
+            if (user==null)
+            {
+                Console.WriteLine("A user with this id doesn't exist");
+                Console.ReadKey(true);
+                return;
+            }
             Console.WriteLine("Id " + user.Id);
             Console.WriteLine("Username: " + user.Username);
             Console.WriteLine("Password: " + user.Password);

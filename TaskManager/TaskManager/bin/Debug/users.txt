@@ -10,3 +10,7 @@ False
 petar
 123
 False
+4
+test
+test
+False
