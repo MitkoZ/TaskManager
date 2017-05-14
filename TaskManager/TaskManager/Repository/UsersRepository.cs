@@ -29,29 +29,5 @@ namespace TaskManager.Repository
             item.Password = streamReader.ReadLine();
             item.isAdmin = Convert.ToBoolean(streamReader.ReadLine());
         }
-
-        public User GetByUsernameAndPassword(string username, string password)
-        {
-            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
-            StreamReader streamReader = new StreamReader(fileStream);
-            try
-            {
-                while (!streamReader.EndOfStream)
-                {
-                    User user = new User();
-                    PopulateEntity(user,streamReader);
-                    if (user.Username==username && user.Password==password)
-                    {
-                        return user;
-                    }
-                }
-            }
-            finally
-            {
-                fileStream.Close();
-                streamReader.Close();
-            }
-            return null;
-        }
     }
 }

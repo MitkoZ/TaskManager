@@ -75,7 +75,7 @@ namespace TaskManager.View
         {
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> tasksList = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);//tasks created by me
+            List<TaskEntity> tasksList = taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id*/u=>u.ParentUserId==AuthenticationService.LoggedUser.Id);//tasks created by me
             tasksList.AddRange(taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id));
             foreach (TaskEntity task in tasksList)
             {
@@ -129,8 +129,8 @@ namespace TaskManager.View
         {
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> myTasksList = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
-            myTasksList.AddRange(taskRepo.GetAllToMake(AuthenticationService.LoggedUser.Id));
+            List<TaskEntity> myTasksList = taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id*/u=>u.ParentUserId==AuthenticationService.LoggedUser.Id);
+            myTasksList.AddRange(taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id)*/ u=>u.AssigneeID==AuthenticationService.LoggedUser.Id));
             CommentRepository commentRepo = new CommentRepository("comments.txt");
             List<CommentEntity> allCommentsList = commentRepo.GetAll();
             if (myTasksList.Count != 0)

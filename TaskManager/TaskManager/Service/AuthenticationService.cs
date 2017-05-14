@@ -15,7 +15,8 @@ namespace TaskManager
         public static void AuthenticateUser(string username, string password)
         {
             UsersRepository userRepo = new UsersRepository("users.txt");
-            LoggedUser = userRepo.GetByUsernameAndPassword(username, password);
+            List<User> result = userRepo.GetAll(u => u.Username == username && u.Password == password);
+            LoggedUser = result.Count > 0 ? result[0] : null;
         }
     }
 }

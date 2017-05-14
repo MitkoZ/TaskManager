@@ -218,7 +218,7 @@ namespace TaskManager.View
         {
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> createdTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            List<TaskEntity> createdTasks = taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id*/ u=>u.ParentUserId==AuthenticationService.LoggedUser.Id);
             if (createdTasks.Count == 0)
             {
                 Console.WriteLine("You don't have any created tasks");
@@ -233,7 +233,7 @@ namespace TaskManager.View
                 Console.WriteLine("Name: {0}",task.Name);
                 Console.WriteLine("Description: {0}", task.Description);
                 Console.WriteLine("Estimated time: {0}", task.EstimatedTime);
-                Console.WriteLine("The person that will make it: {0}",userRepo.GetById(task.MakerID).Username);
+                Console.WriteLine("The person that will make it: {0}",userRepo.GetById(task.AssigneeID).Username);
                 Console.WriteLine("Date created: {0}",task.DateCreated);
                 Console.WriteLine("Date last updated: {0}", task.DateLastUpdated);
                 Console.WriteLine("Is done? {0}", task.IsDone);
@@ -246,7 +246,7 @@ namespace TaskManager.View
         {
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> createdTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            List<TaskEntity> createdTasks = taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id*/ u=>u.ParentUserId==AuthenticationService.LoggedUser.Id);
             if (createdTasks.Count==0)
             {
                 Console.WriteLine("You don't have any created tasks");
@@ -413,10 +413,18 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
-            Console.Write("Please write the person who will make the task (by id): ");
-            task.MakerID = Int32.Parse(Console.ReadLine());
             UsersRepository usersRepo = new UsersRepository("users.txt");
-            User userDatabase=usersRepo.GetById(task.MakerID);
+            List<User> users = usersRepo.GetAll(user => user.Id != AuthenticationService.LoggedUser.Id);
+            Console.WriteLine("Users:");
+            foreach (User user in users)
+            {
+                Console.WriteLine("ID: "+user.Id);
+                Console.WriteLine("Username: "+user.Username);
+                Console.WriteLine("##################################");
+            }
+            Console.Write("Please write the person who will make the task (by id): ");
+            task.AssigneeID = Int32.Parse(Console.ReadLine());
+            User userDatabase=usersRepo.GetById(task.AssigneeID);
             if (userDatabase==null)
             {
                 Console.WriteLine("A user with this id doesn't exist");
@@ -434,7 +442,7 @@ namespace TaskManager.View
         {
             Console.Clear();
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> tasksCreatedByMe = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            List<TaskEntity> tasksCreatedByMe = taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id*/ u=>u.ParentUserId==AuthenticationService.LoggedUser.Id);
             if (tasksCreatedByMe.Count==0)
             {
                 Console.WriteLine("You don't have any tasks");
@@ -483,7 +491,7 @@ namespace TaskManager.View
             Console.Clear();
             Console.WriteLine("Update task");
             TaskRepository taskRepo = new TaskRepository("tasks.txt");
-            List<TaskEntity> myTasks = taskRepo.GetAll(AuthenticationService.LoggedUser.Id);
+            List<TaskEntity> myTasks = taskRepo.GetAll(/*AuthenticationService.LoggedUser.Id*/ u=>u.ParentUserId==AuthenticationService.LoggedUser.Id);
             if (myTasks.Count==0)
             {
                 Console.WriteLine("You don't have any created tasks");
@@ -560,7 +568,16 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
-            Console.WriteLine("Person(id) that will make the task: {0}", task.MakerID);
+            UsersRepository userRepo = new UsersRepository("users.txt");
+            List<User>users=userRepo.GetAll(user => user.Id != AuthenticationService.LoggedUser.Id);
+            Console.WriteLine("Users:");
+            foreach (User user in users)
+            {
+                Console.WriteLine("ID: " + user.Id);
+                Console.WriteLine("Username: " + user.Username);
+                Console.WriteLine("##################################");
+            }
+            Console.WriteLine("Person(id) that will make the task: {0}", task.AssigneeID);
             Console.Write("Please enter new person(id) that will make the task: ");
             int newMakerId = 0;
             try
@@ -601,7 +618,7 @@ namespace TaskManager.View
             task.Name = newName;
             task.Description = newDescription;
             task.EstimatedTime = newEstimatedTime;
-            task.MakerID = newMakerId;
+            task.AssigneeID = newMakerId;
             task.IsDone = newIsDone;
             task.DateLastUpdated = DateTime.Now;
             taskRepo.Save(task);

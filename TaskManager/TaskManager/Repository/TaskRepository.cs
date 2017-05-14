@@ -20,7 +20,7 @@ namespace TaskManager.Repository
             streamWriter.WriteLine(item.Name);
             streamWriter.WriteLine(item.Description);
             streamWriter.WriteLine(item.EstimatedTime);
-            streamWriter.WriteLine(item.MakerID);
+            streamWriter.WriteLine(item.AssigneeID);
             streamWriter.WriteLine(item.ParentUserId);
             streamWriter.WriteLine(item.DateCreated);
             streamWriter.WriteLine(item.DateLastUpdated);
@@ -33,37 +33,41 @@ namespace TaskManager.Repository
             item.Name = streamReader.ReadLine();
             item.Description = streamReader.ReadLine();
             item.EstimatedTime = Int32.Parse(streamReader.ReadLine());
-            item.MakerID = Int32.Parse(streamReader.ReadLine());
+            item.AssigneeID = Int32.Parse(streamReader.ReadLine());
             item.ParentUserId = Int32.Parse(streamReader.ReadLine());
             item.DateCreated = Convert.ToDateTime(streamReader.ReadLine());
             item.DateLastUpdated = Convert.ToDateTime(streamReader.ReadLine());
             item.IsDone = Convert.ToBoolean(streamReader.ReadLine());
         }
+        //comment and taskrepo getall
+        //public List<TaskEntity> GetAll(int parentUserId) //returns the created tasks by me
+        //{
+        ////    Action a = () => Console.WriteLine("test");
 
-        public List<TaskEntity> GetAll(int parentUserId) //returns the created tasks by me
-        {
-            List<TaskEntity> result = new List<TaskEntity>();
-            FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
-            StreamReader streamReader = new StreamReader(fileStream);
-            try
-            {
-                while (!streamReader.EndOfStream)
-                {
-                    TaskEntity task = new TaskEntity();
-                    PopulateEntity(task, streamReader);
-                    if (task.ParentUserId == parentUserId)
-                    {
-                        result.Add(task);
-                    }
-                }
-            }
-            finally
-            {
-                streamReader.Close();
-                fileStream.Close();
-            }
-            return result;
-        }
+        ////    a();
+
+        //    List<TaskEntity> result = new List<TaskEntity>();
+        //    FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
+        //    StreamReader streamReader = new StreamReader(fileStream);
+        //    try
+        //    {
+        //        while (!streamReader.EndOfStream)
+        //        {
+        //            TaskEntity task = new TaskEntity();
+        //            PopulateEntity(task, streamReader);
+        //            if (task.ParentUserId == parentUserId)
+        //            {
+        //                result.Add(task);
+        //            }
+        //        }
+        //    }
+        //    finally
+        //    {
+        //        streamReader.Close();
+        //        fileStream.Close();
+        //    }
+        //    return result;
+        //}
 
         public List<TaskEntity> GetAllToMake(int parentUserId) //returns the tasks that I should make
         {
@@ -76,7 +80,7 @@ namespace TaskManager.Repository
                 {
                     TaskEntity task = new TaskEntity();
                     PopulateEntity(task, streamReader);
-                    if (task.MakerID == parentUserId)
+                    if (task.AssigneeID == parentUserId)
                     {
                         result.Add(task);
                     }

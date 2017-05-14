@@ -10,3 +10,15 @@ C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskMana
 C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe
 C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
 C:\Users\s402\Desktop\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
+C:\Users\s402\Desktop\task manager\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe.config
+C:\Users\s402\Desktop\task manager\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.exe
+C:\Users\s402\Desktop\task manager\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
+C:\Users\s402\Desktop\task manager\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe
+C:\Users\s402\Desktop\task manager\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
+C:\Users\s402\Desktop\task manager\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
+C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe.config
+C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.exe
+C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
+C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
+C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe
+C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.pdb

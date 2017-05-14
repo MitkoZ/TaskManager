@@ -11,7 +11,7 @@ namespace TaskManager.Entity
         public string Name { get; set; }
         public string Description { get; set; }
         public int EstimatedTime { get; set; }
-        public int MakerID { get; set; }
+        public int AssigneeID { get; set; }
         public int ParentUserId { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateLastUpdated { get; set; }

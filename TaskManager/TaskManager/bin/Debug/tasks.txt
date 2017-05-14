@@ -1,72 +1,36 @@
 1
-Project
-some description
-17
-2
+project
+descrp
+25
 3
-29.04.2017 г. 16:23:37 ч.
-01.01.0001 г. 00:00:00 ч.
-False
-2
-project2
-somerandomdescription
-93
-2
-3
-29.04.2017 г. 16:24:39 ч.
-01.01.0001 г. 00:00:00 ч.
-True
-3
-updatedProject
-updateDescription
-666
 1
-3
-29.04.2017 г. 16:25:51 ч.
-29.04.2017 г. 16:32:26 ч.
+11.05.2017 г. 12:34:47 ч.
+14.05.2017 г. 20:19:11 ч.
 False
-4
-TaskCreatedByPetar
-PetarDescription
+2
+Project2
+description123
+35
+1
+2
+11.05.2017 г. 12:37:31 ч.
+01.01.0001 г. 00:00:00 ч.
+False
+3
+Da bicha aylqk
+Da bicha aylqk postoqnno
 12
 2
-3
-29.04.2017 г. 23:36:09 ч.
+1
+11.05.2017 г. 12:43:39 ч.
 01.01.0001 г. 00:00:00 ч.
 False
-6
-CreatedByGoshoGoshevTask2
-decriptiondescript
-35
-3
-2
-30.04.2017 г. 16:09:00 ч.
-01.01.0001 г. 00:00:00 ч.
-True
-8
-some new task
-some new task description
-50
+4
+NewTask123
+Description123
+66
 2
 1
-08.05.2017 г. 00:01:33 ч.
-01.01.0001 г. 00:00:00 ч.
+14.05.2017 г. 20:23:13 ч.
+14.05.2017 г. 20:24:59 ч.
 False
-9
-testTask
-testTask description
-999
-2
-3
-08.05.2017 г. 01:29:23 ч.
-01.01.0001 г. 00:00:00 ч.
-False
-11
-testdoit
-doit
-50
-4
-3
-08.05.2017 г. 17:32:31 ч.
-01.01.0001 г. 00:00:00 ч.
-True

@@ -1,64 +1,8 @@
 1
-5
-2
-some random comment
-2
-6
-2
-another comment
-3
-2
-2
-this task is done
-4
 1
-2
-nqkav komentar
-5
-6
-2
-new comment.....
-6
-7
 1
-very easy task :)
-7
-7
-1
-easy task
-8
-4
+comment123
 2
-some comment
-9
+3
 1
-2
-nqma da stane
-10
-1
-3
-napravi go
-11
-6
-3
-it's finally done
-12
-9
-3
-it's not done
-13
-9
-3
-TestComment
-14
-12
-4
-some comment
-15
-11
-4
-it's done
-16
-12
-4
-it's not done
+K'wo stawa

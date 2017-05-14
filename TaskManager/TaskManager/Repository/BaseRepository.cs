@@ -17,7 +17,7 @@ namespace TaskManager.Repository
             this.filePath = filePath;
         }
 
-        public List<T> GetAll()
+        public List<T> GetAll(Predicate<T> filter = null)
         {
             List<T> result = new List<T>();
             FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
@@ -28,7 +28,11 @@ namespace TaskManager.Repository
                 {
                     T item = new T();
                     PopulateEntity(item, streamReader);
-                    result.Add(item);
+
+                    if (filter == null || filter(item) == true)
+                    {
+                        result.Add(item);
+                    }
                 }
             }
             finally
