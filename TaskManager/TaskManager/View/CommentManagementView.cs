@@ -181,35 +181,41 @@ namespace TaskManager.View
                 Console.ReadKey(true);
                 return;
             }
-            List<CommentEntity> currentTaskComments = new List<CommentEntity>();
-            CommentEntity commentEntity = new CommentEntity();
             FileStream fileStream = new FileStream("comments.txt", FileMode.Open);
             StreamReader streamReader = new StreamReader(fileStream);
-            while (!streamReader.EndOfStream)
+            try
             {
-                commentRepo.PopulateEntity(commentEntity, streamReader);
-                if (commentEntity.TaskId == idInput)
+                List<CommentEntity> currentTaskComments = new List<CommentEntity>();
+                CommentEntity commentEntity = new CommentEntity();
+                while (!streamReader.EndOfStream)
                 {
-                    currentTaskComments.Add(new CommentEntity { ParentUserId = commentEntity.ParentUserId, Comment = commentEntity.Comment });
+                    commentRepo.PopulateEntity(commentEntity, streamReader);
+                    if (commentEntity.TaskId == idInput)
+                    {
+                        currentTaskComments.Add(new CommentEntity { ParentUserId = commentEntity.ParentUserId, Comment = commentEntity.Comment });
+                    }
                 }
-            }
-            if (currentTaskComments.Count == 0)
-            {
-                Console.WriteLine("This tasks doesn't have any comments");
-                Console.ReadKey(true);
-                return;
-            }
-            Console.Clear();
-            UsersRepository userRepo = new UsersRepository("users.txt");
-            foreach (CommentEntity comment in currentTaskComments)
-            {
+                if (currentTaskComments.Count == 0)
+                {
+                    Console.WriteLine("This tasks doesn't have any comments");
+                    Console.ReadKey(true);
+                    return;
+                }
+                Console.Clear();
+                UsersRepository userRepo = new UsersRepository("users.txt");
+                foreach (CommentEntity comment in currentTaskComments)
+                {
 
-                Console.WriteLine("Commenter: " + userRepo.GetById(comment.ParentUserId).Username);
-                Console.WriteLine("Comment: " + comment.Comment);
+                    Console.WriteLine("Commenter: " + userRepo.GetById(comment.ParentUserId).Username);
+                    Console.WriteLine("Comment: " + comment.Comment);
+                }
+                Console.ReadKey(true);
             }
-            Console.ReadKey(true);
-            fileStream.Close();
-            streamReader.Close();
+            finally
+            {
+                fileStream.Close();
+                streamReader.Close();
+            }
         }
     }
 }

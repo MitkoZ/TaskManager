@@ -22,3 +22,9 @@ C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManag
 C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache
 C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.exe
 C:\Users\PC\Desktop\University\2ra grupa\OOP\Serialization and filters\TaskManager-master\TaskManager-master\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
+C:\Users\PC\Desktop\TaskManager\TaskManager\bin\Debug\TaskManager.exe.config
+C:\Users\PC\Desktop\TaskManager\TaskManager\obj\Debug\TaskManager.exe
+C:\Users\PC\Desktop\TaskManager\TaskManager\obj\Debug\TaskManager.pdb
+C:\Users\PC\Desktop\TaskManager\TaskManager\bin\Debug\TaskManager.exe
+C:\Users\PC\Desktop\TaskManager\TaskManager\bin\Debug\TaskManager.pdb
+C:\Users\PC\Desktop\TaskManager\TaskManager\obj\Debug\TaskManager.csprojResolveAssemblyReference.cache

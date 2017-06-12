@@ -1,36 +1,18 @@
 1
-project
-descrp
-25
-3
-1
-11.05.2017 г. 12:34:47 ч.
-14.05.2017 г. 20:19:11 ч.
-False
+some random task name
+some random description
+34
 2
-Project2
-description123
-35
 1
-2
-11.05.2017 г. 12:37:31 ч.
+12.06.2017 г. 18:05:49 ч.
 01.01.0001 г. 00:00:00 ч.
-False
-3
-Da bicha aylqk
-Da bicha aylqk postoqnno
-12
+True
 2
+TaskName
+TaskDescription
+60
 1
-11.05.2017 г. 12:43:39 ч.
+2
+12.06.2017 г. 18:07:10 ч.
 01.01.0001 г. 00:00:00 ч.
-False
-4
-NewTask123
-Description123
-66
-2
-1
-14.05.2017 г. 20:23:13 ч.
-14.05.2017 г. 20:24:59 ч.
 False

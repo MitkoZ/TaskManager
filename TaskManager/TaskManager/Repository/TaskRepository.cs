@@ -39,13 +39,9 @@ namespace TaskManager.Repository
             item.DateLastUpdated = Convert.ToDateTime(streamReader.ReadLine());
             item.IsDone = Convert.ToBoolean(streamReader.ReadLine());
         }
-        //comment and taskrepo getall
         //public List<TaskEntity> GetAll(int parentUserId) //returns the created tasks by me
         //{
-        ////    Action a = () => Console.WriteLine("test");
-
-        ////    a();
-
+        //    // 
         //    List<TaskEntity> result = new List<TaskEntity>();
         //    FileStream fileStream = new FileStream(this.filePath, FileMode.OpenOrCreate);
         //    StreamReader streamReader = new StreamReader(fileStream);

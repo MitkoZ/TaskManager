@@ -1,12 +1,8 @@
 1
 admin
 adminpass
-true
+True
 2
 pesho
 123456
-False
-3
-gosho
-123
 False
